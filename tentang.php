@@ -18,9 +18,6 @@ require_once("templates/top.php");
           <?php foreach ($views_tentang as $data) {
             echo $data['deskripsi'];
           } ?>
-          <a href="tentang">
-            Baca Lebih
-          </a>
         </div>
       </div>
       <div class="col-md-6 ">
