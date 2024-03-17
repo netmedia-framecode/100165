@@ -31,22 +31,12 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 // Area Chart Example
 var ctx = document.getElementById("myAreaChart");
 
-// Assuming that "dataGrafik" is an array of objects with "month" and "hasil_prediksi" properties
+// Assuming that "dataGrafik" is an array of objects with "periode" (year) and "hasil_prediksi" properties
 var categories = [...new Set(dataGrafik.map((item) => item.category))];
-var monthsSet = new Set(dataGrafik.map((item) => item.month));
-var months = Array.from(monthsSet).sort((a, b) => new Date(a) - new Date(b));
+var yearsSet = new Set(dataGrafik.map((item) => item.periode));
+var years = Array.from(yearsSet).sort((a, b) => a - b); // Sort the years in ascending order
 
-// Create an array of month numbers (1 to 12) for sorting
-var monthNumbers = months.map(
-  (month) => new Date(`${month} 1, 2000`).getMonth() + 1
-);
-
-// Sort the months array based on the corresponding month numbers
-months.sort(
-  (a, b) => monthNumbers[months.indexOf(a)] - monthNumbers[months.indexOf(b)]
-);
-
-// Create an empty data structure for each category
+// Create an array of empty data structures for each category
 var datasets = categories.map((category, index) => {
   return {
     label: category,
@@ -54,19 +44,19 @@ var datasets = categories.map((category, index) => {
     hoverBackgroundColor: getHoverBackgroundColor(index),
     borderColor: getBorderColor(index),
     borderWidth: 1,
-    data: months.map((month) => {
+    data: years.map((year) => {
       var dataPoint = dataGrafik.find(
-        (item) => item.category === category && item.month === month
+        (item) => item.category === category && item.periode === year
       );
       return dataPoint ? dataPoint.hasil_prediksi : 0;
     }),
   };
 });
 
-var myBarChart = new Chart(ctx, {
+var myLineChart = new Chart(ctx, {
   type: "line",
   data: {
-    labels: months, // Use labels to specify x-axis values
+    labels: years.map(String), // Convert years to strings for better display
     datasets: datasets,
   },
   options: {
@@ -86,7 +76,7 @@ var myBarChart = new Chart(ctx, {
           display: false,
           drawBorder: false,
         },
-        labels: months,
+        labels: years.map(String),
       },
       y: {
         position: "left",

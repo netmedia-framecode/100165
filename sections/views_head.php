@@ -25,3 +25,4 @@
 
 <!-- Custom styles for plugin -->
 <script src="<?= $baseURL ?>assets/sweetalert/dist/sweetalert2.all.min.js"></script>
+<script src="<?= $baseURL; ?>/assets/ckeditor/ckeditor.js"></script>

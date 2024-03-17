@@ -20,7 +20,7 @@ require_once("../templates/views_top.php"); ?>
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                 Variabel & Periode</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800"><a href="variabel">0</a> / <a href="periode">0</a></div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><a href="variabel"><?= mysqli_num_rows($views_variabel) ?></a> / <a href="periode"><?= mysqli_num_rows($views_periode) ?></a></div>
             </div>
             <div class="col-auto">
               <i class="bi bi-list-ul fa-2x"></i>
@@ -37,7 +37,7 @@ require_once("../templates/views_top.php"); ?>
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                 Dataset</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><?= mysqli_num_rows($views_dataset) ?></div>
             </div>
             <div class="col-auto">
               <i class="bi bi-bar-chart-steps fa-2x"></i>
@@ -54,7 +54,7 @@ require_once("../templates/views_top.php"); ?>
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                 Regression Linear</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><?= mysqli_num_rows($views_hasil_rl) ?></div>
             </div>
             <div class="col-auto">
               <i class="bi bi-calculator fa-2x"></i>
@@ -71,7 +71,7 @@ require_once("../templates/views_top.php"); ?>
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                 Exponential Smoothing</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><?= mysqli_num_rows($views_hasil_es) ?></div>
             </div>
             <div class="col-auto">
               <i class="bi bi-calculator fa-2x"></i>
@@ -118,25 +118,24 @@ require_once("../templates/views_top.php"); ?>
             $currentYear = date('Y');
             if (isset($_POST['grafik'])) {
               if ($_POST['grafik'] == 'rl') {
-                $sql = "SELECT 'Regression Linear' as category, MONTH(created_at) as month, hasil_prediksi FROM hasil_rl WHERE YEAR(created_at) = $currentYear AND MONTH(created_at) BETWEEN 1 AND 12 GROUP BY month";
+                $sql = "SELECT 'Regression Linear' as category, periode, hasil_prediksi FROM hasil_rl GROUP BY periode";
               }
               if ($_POST['grafik'] == 'es') {
-                $sql = "SELECT 'Exponential Smoothing' as category, MONTH(created_at) as month, hasil_prediksi FROM hasil_es WHERE YEAR(created_at) = $currentYear AND MONTH(created_at) BETWEEN 1 AND 12 GROUP BY month";
+                $sql = "SELECT 'Exponential Smoothing' as category, periode, hasil_prediksi FROM hasil_es GROUP BY periode";
               }
             } else {
-              $sql = "SELECT 'Regression Linear' as category, MONTH(created_at) as month, hasil_prediksi FROM hasil_rl WHERE YEAR(created_at) = $currentYear AND MONTH(created_at) BETWEEN 1 AND 12 GROUP BY month
+              $sql = "SELECT 'Regression Linear' as category, periode, hasil_prediksi FROM hasil_rl GROUP BY periode
               UNION
-              SELECT 'Exponential Smoothing' as category, MONTH(created_at) as month, hasil_prediksi FROM hasil_es WHERE YEAR(created_at) = $currentYear AND MONTH(created_at) BETWEEN 1 AND 12 GROUP BY month";
+              SELECT 'Exponential Smoothing' as category, periode, hasil_prediksi FROM hasil_es GROUP BY periode";
             }
             $result = $conn->query($sql);
             $dataGrafik = [];
             if ($result->num_rows > 0) {
               while ($row = $result->fetch_assoc()) {
-                $namaBulan = DateTime::createFromFormat('!m', $row['month'])->format('F');
                 $dataGrafik[] = [
                   'category' => $row['category'],
                   'hasil_prediksi' => $row['hasil_prediksi'],
-                  'month' => $namaBulan,
+                  'periode' => $row['periode'],
                 ];
               }
             }

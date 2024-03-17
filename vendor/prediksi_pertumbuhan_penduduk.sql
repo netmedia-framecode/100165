@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 11 Mar 2024 pada 14.19
+-- Waktu pembuatan: 17 Mar 2024 pada 21.07
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -38,7 +38,7 @@ CREATE TABLE `auth` (
 --
 
 INSERT INTO `auth` (`id`, `image`, `bg`) VALUES
-(1, 'auth.jpg', '#476dda');
+(1, 'auth.jpg', '#f07b26');
 
 -- --------------------------------------------------------
 
@@ -155,7 +155,13 @@ CREATE TABLE `hasil_es` (
 
 INSERT INTO `hasil_es` (`id_rl`, `periode`, `nilai_alpha`, `var_dependen`, `hasil_prediksi`, `created_at`, `updated_at`) VALUES
 (1, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-11 20:30:16', '2024-03-11 20:30:16'),
-(2, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-04-18 21:04:02', '2024-03-11 21:16:55');
+(2, 2025, '0.2', 'jumlah_penduduk', '224564.454', '2024-04-18 21:04:02', '2024-03-12 02:33:40'),
+(3, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:34:25', '2024-03-18 03:34:25'),
+(4, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:34:25', '2024-03-18 03:34:25'),
+(5, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:34:43', '2024-03-18 03:34:43'),
+(6, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:34:43', '2024-03-18 03:34:43'),
+(7, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:35:36', '2024-03-18 03:35:36'),
+(8, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:35:36', '2024-03-18 03:35:36');
 
 -- --------------------------------------------------------
 
@@ -181,8 +187,56 @@ CREATE TABLE `hasil_rl` (
 INSERT INTO `hasil_rl` (`id_rl`, `periode`, `jumlah_migrasi`, `var_independen`, `var_dependen`, `hasil_prediksi`, `created_at`, `updated_at`) VALUES
 (1, 2023, '0.2', 'jumlah_migrasi', 'jumlah_penduduk', '212282.730', '2024-03-11 20:30:14', '2024-03-11 20:30:14'),
 (2, 2023, '0.2', 'jumlah_migrasi', 'jumlah_penduduk', '212282.730', '2024-04-18 20:37:53', '2024-03-11 21:17:32'),
-(3, 2023, '1000', 'jumlah_penduduk', 'jumlah_migrasi', '-37362.948', '2024-05-16 20:38:03', '2024-03-11 21:17:40'),
-(4, 2023, '1000', 'jumlah_penduduk', 'jumlah_migrasi', '-37362.948', '2024-03-11 21:03:58', '2024-03-11 21:03:58');
+(3, 2024, '1000', 'jumlah_penduduk', 'jumlah_migrasi', '-37362.948', '2024-05-16 20:38:03', '2024-03-12 02:33:19'),
+(4, 2024, '1000', 'jumlah_penduduk', 'jumlah_migrasi', '-37362.948', '2024-03-11 21:03:58', '2024-03-12 02:33:24'),
+(5, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:31:29', '2024-03-18 03:31:29'),
+(6, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:31:29', '2024-03-18 03:31:29'),
+(7, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:33:03', '2024-03-18 03:33:03'),
+(8, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:33:03', '2024-03-18 03:33:03'),
+(9, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:33:48', '2024-03-18 03:33:48'),
+(10, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:33:48', '2024-03-18 03:33:48'),
+(11, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:11', '2024-03-18 03:34:11'),
+(12, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:11', '2024-03-18 03:34:11'),
+(13, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:25', '2024-03-18 03:34:25'),
+(14, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:25', '2024-03-18 03:34:25'),
+(15, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:43', '2024-03-18 03:34:43'),
+(16, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:43', '2024-03-18 03:34:43'),
+(17, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:35:36', '2024-03-18 03:35:36'),
+(18, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:35:36', '2024-03-18 03:35:36');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `kontak`
+--
+
+CREATE TABLE `kontak` (
+  `id_kontak` int(11) NOT NULL,
+  `nama` varchar(75) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `phone` char(12) DEFAULT NULL,
+  `pesan` text DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tentang`
+--
+
+CREATE TABLE `tentang` (
+  `id` int(11) NOT NULL,
+  `deskripsi` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `tentang`
+--
+
+INSERT INTO `tentang` (`id`, `deskripsi`) VALUES
+(1, '<p><strong>Kabupaten Belu</strong> merupakan salah satu kabupaten yang berada di Nusa Tenggara Timur dimana kabupaten ini merupakan kabupaten yang berbatasan langsung dengan Negara Republic Democratica de Timor Leste yang dimana tiap tahunnya pertumbuhan penduduk terus bertambah pada kabupaten ini. Salah satu Kecamatan yang terletak di wilayah ini adalah Kecamatan Tasifeto Barat. Kecamatan ini menawarkan potensi yang menarik, termasuk perkembangan penduduk yang signifikan dalam beberapa tahun terakhir.</p>\r\n');
 
 -- --------------------------------------------------------
 
@@ -246,7 +300,8 @@ INSERT INTO `user_access_menu` (`id_access_menu`, `id_role`, `id_menu`) VALUES
 (1, 1, 1),
 (2, 1, 2),
 (3, 1, 3),
-(4, 1, 4);
+(4, 1, 4),
+(9, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -276,7 +331,9 @@ INSERT INTO `user_access_sub_menu` (`id_access_sub_menu`, `id_role`, `id_sub_men
 (51, 1, 73),
 (53, 1, 75),
 (54, 1, 76),
-(57, 1, 15);
+(57, 1, 15),
+(58, 1, 78),
+(59, 1, 79);
 
 -- --------------------------------------------------------
 
@@ -297,7 +354,8 @@ INSERT INTO `user_menu` (`id_menu`, `menu`) VALUES
 (1, 'User Management'),
 (2, 'Menu Management'),
 (3, 'Kelola Data'),
-(4, 'Laporan');
+(4, 'Laporan'),
+(5, 'Lainnya');
 
 -- --------------------------------------------------------
 
@@ -368,7 +426,9 @@ INSERT INTO `user_sub_menu` (`id_sub_menu`, `id_menu`, `id_active`, `title`, `ur
 (19, 3, 1, 'Periode', 'periode', 'fas fa-list-ol'),
 (73, 3, 1, 'Dataset', 'dataset', 'fas fa-list-ol'),
 (75, 3, 1, 'Regression Linear', 'regression-linear', 'fas fa-calculator'),
-(76, 3, 1, 'Exponential Smoothing', 'exponential-smoothing', 'fas fa-calculator');
+(76, 3, 1, 'Exponential Smoothing', 'exponential-smoothing', 'fas fa-calculator'),
+(78, 5, 1, 'Tentang', 'tentang', 'fas fa-list-ul'),
+(79, 5, 1, 'Kontak', 'kontak', 'fas fa-comments');
 
 --
 -- Indexes for dumped tables
@@ -417,6 +477,18 @@ ALTER TABLE `hasil_es`
 --
 ALTER TABLE `hasil_rl`
   ADD PRIMARY KEY (`id_rl`);
+
+--
+-- Indeks untuk tabel `kontak`
+--
+ALTER TABLE `kontak`
+  ADD PRIMARY KEY (`id_kontak`);
+
+--
+-- Indeks untuk tabel `tentang`
+--
+ALTER TABLE `tentang`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `users`
@@ -506,13 +578,25 @@ ALTER TABLE `data_variabel`
 -- AUTO_INCREMENT untuk tabel `hasil_es`
 --
 ALTER TABLE `hasil_es`
-  MODIFY `id_rl` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_rl` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT untuk tabel `hasil_rl`
 --
 ALTER TABLE `hasil_rl`
-  MODIFY `id_rl` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_rl` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT untuk tabel `kontak`
+--
+ALTER TABLE `kontak`
+  MODIFY `id_kontak` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `tentang`
+--
+ALTER TABLE `tentang`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
@@ -524,19 +608,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-  MODIFY `id_access_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_access_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_access_sub_menu`
 --
 ALTER TABLE `user_access_sub_menu`
-  MODIFY `id_access_sub_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id_access_sub_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_menu`
 --
 ALTER TABLE `user_menu`
-  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_role`
@@ -554,7 +638,7 @@ ALTER TABLE `user_status`
 -- AUTO_INCREMENT untuk tabel `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
-  MODIFY `id_sub_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id_sub_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

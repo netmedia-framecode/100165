@@ -18,7 +18,7 @@ require_once("../templates/views_top.php"); ?>
             Regression Linear
           </button>
         </h2>
-        <a href="export_rl" class="btn btn-primary"><i class="bi bi-download"></i> Export</a>
+        <a href="export_rl" class="btn btn-primary" target="_blank"><i class="bi bi-download"></i> Export</a>
       </div>
       <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
         <div class="card-body">
@@ -69,7 +69,7 @@ require_once("../templates/views_top.php"); ?>
             Exponential Smoothing
           </button>
         </h2>
-        <a href="export_es" class="btn btn-primary"><i class="bi bi-download"></i> Export</a>
+        <a href="export_es" class="btn btn-primary" target="_blank"><i class="bi bi-download"></i> Export</a>
       </div>
       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <div class="card-body">

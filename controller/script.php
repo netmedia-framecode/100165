@@ -3,7 +3,7 @@
 }
 error_reporting(~E_NOTICE & ~E_DEPRECATED);
 require_once("db_connect.php");
-require_once("../models/sql.php");
+require_once(__DIR__ . "/../models/sql.php");
 require_once("functions.php");
 
 $messageTypes = ["success", "info", "warning", "danger", "dark"];
@@ -13,6 +13,67 @@ $name_website = "Prediksi Pertumbuhan Penduduk";
 
 $select_auth = "SELECT * FROM auth";
 $views_auth = mysqli_query($conn, $select_auth);
+
+$tentang = "SELECT * FROM tentang";
+$views_tentang = mysqli_query($conn, $tentang);
+
+$kontak = "SELECT * FROM kontak";
+$views_kontak = mysqli_query($conn, $kontak);
+if (isset($_POST['add_kontak'])) {
+  $validated_post = array_map(function ($value) use ($conn) {
+    return valid($conn, $value);
+  }, $_POST);
+  if (kontak($conn, $validated_post, $action = 'insert', $pesan = $_POST['pesan']) > 0) {
+    $message = "Pesan anda berhasil dikirim.";
+    $message_type = "success";
+    alert($message, $message_type);
+    header("Location: kontak");
+    exit();
+  }
+}
+
+$periode = "SELECT * FROM data_periode ORDER BY periode ASC";
+$views_periode = mysqli_query($conn, $periode);
+
+$variabel = "SELECT * FROM data_variabel ORDER BY nama_variabel ASC";
+$views_variabel = mysqli_query($conn, $variabel);
+
+if (isset($_POST["uji_prediksi_rl"])) {
+  $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi_rl'] = [
+    'uji_periode' => $_POST['uji_periode'],
+    'data_migrasi' => $_POST['data_migrasi'],
+    'variabel_dependen' => $_POST['variabel_dependen'],
+    'variabel_independen' => $_POST['variabel_independen']
+  ];
+  $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
+  $to_page = str_replace(" ", "-", $to_page);
+  header("Location: $to_page");
+  exit();
+}
+if (isset($_POST["uji_prediksi_es"])) {
+  $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi_es'] = [
+    'uji_periode' => $_POST['uji_periode'],
+    'nilai_alpha' => $_POST['nilai_alpha'],
+    'variabel_dependen' => $_POST['variabel_dependen']
+  ];
+  $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
+  $to_page = str_replace(" ", "-", $to_page);
+  header("Location: $to_page");
+  exit();
+}
+
+$dataset = "SELECT dataset.*, data_periode.periode, data_variabel.nama_variabel
+FROM dataset 
+JOIN data_periode ON dataset.id_periode=data_periode.id_periode 
+JOIN data_variabel ON dataset.id_variabel=data_variabel.id_variabel 
+ORDER BY data_periode.periode ASC
+";
+$views_dataset = mysqli_query($conn, $dataset);
+
+$hasil_rl = "SELECT * FROM hasil_rl ORDER BY periode ASC";
+$views_hasil_rl = mysqli_query($conn, $hasil_rl);
+$hasil_es = "SELECT * FROM hasil_es ORDER BY periode ASC";
+$views_hasil_es = mysqli_query($conn, $hasil_es);
 
 if (!isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
   if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["time_message"]) && (time() - $_SESSION["project_prediksi_pertumbuhan_penduduk"]["time_message"]) > 2) {
@@ -414,8 +475,6 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
     }
   }
 
-  $variabel = "SELECT * FROM data_variabel ORDER BY nama_variabel ASC";
-  $views_variabel = mysqli_query($conn, $variabel);
   if (isset($_POST["add_variabel"])) {
     $validated_post = array_map(function ($value) use ($conn) {
       return valid($conn, $value);
@@ -459,8 +518,6 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
     }
   }
 
-  $periode = "SELECT * FROM data_periode ORDER BY periode ASC";
-  $views_periode = mysqli_query($conn, $periode);
   $last_periode = "SELECT * FROM data_periode ORDER BY periode DESC LIMIT 1";
   $views_last_periode = mysqli_query($conn, $last_periode);
   if (mysqli_num_rows($views_last_periode) > 0) {
@@ -512,13 +569,6 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
     }
   }
 
-  $dataset = "SELECT dataset.*, data_periode.periode, data_variabel.nama_variabel
-                      FROM dataset 
-                      JOIN data_periode ON dataset.id_periode=data_periode.id_periode 
-                      JOIN data_variabel ON dataset.id_variabel=data_variabel.id_variabel 
-                      ORDER BY data_periode.periode ASC
-                    ";
-  $views_dataset = mysqli_query($conn, $dataset);
   $select_periode = "SELECT * FROM data_periode WHERE NOT EXISTS (SELECT 1 FROM dataset JOIN data_variabel ON dataset.id_variabel = data_variabel.id_variabel WHERE dataset.id_periode = data_periode.id_periode AND dataset.id_variabel = data_variabel.id_variabel)";
   $views_select_periode = mysqli_query($conn, $select_periode);
   if (isset($_POST["add_dataset"])) {
@@ -564,32 +614,26 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
     }
   }
 
-  if (isset($_POST["uji_prediksi_rl"])) {
-    $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi_rl'] = [
-      'uji_periode' => $_POST['uji_periode'],
-      'data_migrasi' => $_POST['data_migrasi'],
-      'variabel_dependen' => $_POST['variabel_dependen'],
-      'variabel_independen' => $_POST['variabel_independen']
-    ];
-    $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-    $to_page = str_replace(" ", "-", $to_page);
-    header("Location: $to_page");
-    exit();
-  }
-  if (isset($_POST["uji_prediksi_es"])) {
-    $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi_es'] = [
-      'uji_periode' => $_POST['uji_periode'],
-      'nilai_alpha' => $_POST['nilai_alpha'],
-      'variabel_dependen' => $_POST['variabel_dependen']
-    ];
-    $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-    $to_page = str_replace(" ", "-", $to_page);
-    header("Location: $to_page");
-    exit();
+  if (isset($_POST["edit_tentang"])) {
+    if (tentang($conn, $_POST, $action = 'update') > 0) {
+      $message = "Deskripsi tentang berhasil diubah.";
+      $message_type = "success";
+      alert($message, $message_type);
+      header("Location: tentang");
+      exit();
+    }
   }
 
-  $hasil_rl = "SELECT * FROM hasil_rl ORDER BY periode ASC";
-  $views_hasil_rl = mysqli_query($conn, $hasil_rl);
-  $hasil_es = "SELECT * FROM hasil_es ORDER BY periode ASC";
-  $views_hasil_es = mysqli_query($conn, $hasil_es);
+  if (isset($_POST["delete_kontak"])) {
+    $validated_post = array_map(function ($value) use ($conn) {
+      return valid($conn, $value);
+    }, $_POST);
+    if (kontak($conn, $validated_post, $action = 'delete', $_POST['pesan']) > 0) {
+      $message = "Pesan berhasil dihapus.";
+      $message_type = "success";
+      alert($message, $message_type);
+      header("Location: kontak");
+      exit();
+    }
+  }
 }

@@ -1,105 +1,114 @@
-<!DOCTYPE html>
-<html lang="id">
+<?php require_once("controller/script.php");
+$_SESSION["project_prediksi_pertumbuhan_penduduk"]['name_page'] = "Beranda";
+require_once("templates/top.php");
+?>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prediksi Pertumbuhan Penduduk</title>
-
-  <style type="text/css">
-    ::selection {
-      background-color: #e13300;
-      color: white;
-    }
-
-    ::-moz-selection {
-      background-color: #e13300;
-      color: white;
-    }
-
-    body {
-      background-color: #fff;
-      margin: 40px;
-      font: 13px/20px normal Helvetica, Arial, sans-serif;
-      color: #4f5155;
-    }
-
-    a {
-      color: #003399;
-      background-color: transparent;
-      font-weight: normal;
-    }
-
-    h1 {
-      color: #444;
-      background-color: transparent;
-      border-bottom: 1px solid #d0d0d0;
-      font-size: 19px;
-      font-weight: normal;
-      margin: 0 0 14px 0;
-      padding: 14px 15px 10px 15px;
-    }
-
-    code {
-      font-family: Consolas, Monaco, Courier New, Courier, monospace;
-      font-size: 12px;
-      background-color: #f9f9f9;
-      border: 1px solid #d0d0d0;
-      color: #002166;
-      display: block;
-      margin: 14px 0 14px 0;
-      padding: 12px 10px 12px 10px;
-    }
-
-    #body {
-      margin: 0 15px 0 15px;
-    }
-
-    p.footer {
-      text-align: right;
-      font-size: 11px;
-      border-top: 1px solid #d0d0d0;
-      line-height: 32px;
-      padding: 0 10px 0 10px;
-      margin: 20px 0 0 0;
-    }
-
-    #container {
-      margin: 10px;
-      border: 1px solid #d0d0d0;
-      box-shadow: 0 0 8px #d0d0d0;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="container">
-    <h1>Project Prediksi Pertumbuhan Penduduk</h1>
-
-    <div id="body">
-      <p>
-        Halaman yang Anda lihat dibuat secara dinamis oleh Netmedia Framecode.
-      </p>
-      <p>
-        Tampilan <strong>UI (User Interface)</strong> dan <strong>Console</strong> dapat anda ubah dengan melihat berbagai macam template dari vendor Netmedia Framecode
-      </p>
-      <code><i class="bi bi-list"></i>
-        <h3>Template UI</h3>
-        <a href="https://free-css.com/free-css-templates" style="width: 100%; height: 75vh;" frameborder="0" target="_blank">Lihat template</a>
-      </code>
-      <code><i class="bi bi-list"></i>
-        <h3>Template Console</h3>
-        <iframe src="https://freshdesignweb.com/free-admin-templates/" style="width: 100%;height: 75vh;" frameborder="0"></iframe>
-      </code>
-      <p>
-        Jika anda ingin melanjutkan ke <strong>Console</strong> bisa klik link dibawah ini:
-      </p>
-      <code><i class="bi bi-list"></i>
-        <a href="auth/" style="text-decoration: none;">auth/</a>
-      </code>
+<section class="slider_section">
+  <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="container ">
+          <div class="row">
+            <div class="col-md-10 mx-auto">
+              <div class="detail-box">
+                <h1>
+                  KABUPATEN BELU<br>
+                  Kecamatan Tasifeto Barat
+                </h1>
+                <p class="text-light">System ini bertujuan untuk pengimplementasian metode regresi linier dan metode single exponential smoothing untuk memprediksi jumlah penduduk di kecamatan Tasifeto Barat.</p>
+                <div class="btn-box">
+                  <a href="prediksi" class="btn1">
+                    Prediksi
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</body>
 
-</html>
+</section>
+</div>
+
+<section class="about_section layout_padding">
+  <div class="container  ">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="detail-box">
+          <div class="heading_container">
+            <h2>
+              Tentang
+            </h2>
+          </div>
+          <?php foreach ($views_tentang as $data) {
+            $num_char = 350;
+            $text = trim($data['deskripsi']);
+            $text = preg_replace('#</?strong.*?>#is', '', $text);
+            $lentext = strlen($text);
+            if ($lentext > $num_char) {
+              echo substr($text, 0, $num_char) . '...';
+            } else if ($lentext <= $num_char) {
+              echo substr($text, 0, $num_char);
+            }
+          } ?>
+          <a href="tentang">
+            Baca Lebih
+          </a>
+        </div>
+      </div>
+      <div class="col-md-6 ">
+        <div class="img-box">
+          <img src="assets/img/IMG-20240314-WA0008.jpg" style="height: 400px;width: 100%; object-fit: cover;" alt="">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="why_us_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2>
+        Prediksi
+      </h2>
+    </div>
+    <div class="why_us_container">
+      <div class="box">
+        <div class="img-box">
+          <img src="assets/img/grafik.png" alt="">
+        </div>
+        <div class="detail-box">
+          <h5>
+            Regresi Linear
+          </h5>
+          <p>
+            Regresi linier adalah sebuah metode statistik yang digunakan untuk menganalisis hubungan antara dua atau lebih variabel, di mana salah satu variabel digunakan untuk memprediksi variabel lain. Dalam regresi linier, kita mencoba membuat prediksi atau mengukur bagaimana satu hal dipengaruhi oleh yang lain. Pertama, kita memiliki variabel dependen (Y) yang merupakan hal yang ingin kita pahami atau prediksi. Kemudian, kita memiliki variabel independen (X), yang kita pikir mungkin mempengaruhi variabel dependen. Dalam penelitian ini, digunakan regresi liier berganda karena terdapat lebih dari satu buah variabel independen. Dataset penelitian terdiri atas satu variabel dependen (Y) dan dua variabel independen (X). Variabel dependen tersebut adalah atribut jumlah penduduk.
+          </p>
+        </div>
+      </div>
+      <div class="box">
+        <div class="img-box">
+          <img src="assets/img/grafik.png" alt="">
+        </div>
+        <div class="detail-box">
+          <h5>
+            Single Exponential Smoothing
+          </h5>
+          <p>
+            Metode single exponential smoothing merupakan metode peramalan yang digunakan untuk meramalkan masa yang akan datang dengan melakukan proses pemulusan (smoothing) dengan menghasilkan data ramalan yang lebih kecil nilai kesalahannya. Metode ini banyak digunakan dalam peramalan, perencanaan persediaan, dan manajemen rantai pasokan untuk membuat estimasi yang lebih baik tentang masa depan berdasarkan data historis. Dalam perhitungan kali ini, peneliti menggunakan metode single exponential smoothing, yang mana data dianggap tidak stabil karena mengalami penurunan dan kenaikan di sekitar nilai mean (nilai rata-rata) yang tetap atau stabil. Penggunaan metode single exponential smoothing dalam memprediksi jumlah penduduk sangat tergantung pada karakteristik data dan tujuan prediksi yang diinginkan.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="btn-box">
+      <a href="prediksi">
+        Lihat Prediksi
+      </a>
+    </div>
+  </div>
+</section>
+
+<?php require_once("templates/bottom.php") ?>
