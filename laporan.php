@@ -31,8 +31,7 @@ require_once("templates/top.php");
                   <button type="submit" name="grafik" value="es" class="dropdown-item" id="es">Exponential Smoothing</button>
                 </form>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="./">All</a>
-                <a class="dropdown-item" href="ringkasan-hasil">Ringkasan Hasil</a>
+                <a class="dropdown-item" href="laporan">All</a>
               </div>
             </div>
           </div>
