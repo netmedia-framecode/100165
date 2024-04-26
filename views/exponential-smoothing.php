@@ -17,14 +17,18 @@ require_once("../templates/views_top.php"); ?>
           <h5 class="card-title">Prediksi</h5>
         </div>
         <form action="" method="post">
+          <input type="hidden" name="variabel_dependen" value="60">
           <div class="card-body">
             <div class="form-group">
               <label for="uji_periode">Periode</label>
               <select name="uji_periode" class="form-control" id="uji_periode" required>
                 <option value="" selected>Pilih Periode</option>
-                <?php foreach ($views_periode as $data_select_periode) { ?>
-                  <option value="<?= $data_select_periode['periode'] ?>"><?= $data_select_periode['periode'] ?></option>
-                <?php } ?>
+                <?php
+                $tahun_sekarang = date('Y') + 1;
+                for ($tahun = $tahun_sekarang; $tahun <= $tahun_sekarang + 3; $tahun++) {
+                  echo '<option value="' . $tahun . '">' . $tahun . '</option>';
+                }
+                ?>
               </select>
             </div>
             <div class="form-group">
@@ -41,17 +45,6 @@ require_once("../templates/views_top.php"); ?>
                   });
                 });
               </script>
-            </div>
-            <hr>
-            <h5 class="font-weight-bold">Variabel</h5>
-            <div class="form-group">
-              <label for="variabel_dependen">Variabel Dependen</label>
-              <select name="variabel_dependen" class="form-control" id="variabel_dependen" required>
-                <option value="" selected>Pilih Variabel</option>
-                <?php foreach ($views_variabel as $data_select_variabel) { ?>
-                  <option value="<?= $data_select_variabel['id_variabel'] ?>"><?= $data_select_variabel['nama_variabel'] ?></option>
-                <?php } ?>
-              </select>
             </div>
           </div>
           <div class="card-footer">
@@ -130,38 +123,6 @@ require_once("../templates/views_top.php"); ?>
                               ORDER BY dataset.id_periode";
         $views_dependen = mysqli_query($conn, $select_dependen);
         ?>
-
-        <div class="card shadow mb-3">
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered text-dark" id="dataTable1">
-                <thead>
-                  <tr>
-                    <th class="text-center">Periode</th>
-                    <th class="text-center">Nama Variabel</th>
-                    <th class="text-center">Jumlah</th>
-                  </tr>
-                </thead>
-                <tfoot>
-                  <tr>
-                    <th class="text-center">Periode</th>
-                    <th class="text-center">Nama Variabel</th>
-                    <th class="text-center">Jumlah</th>
-                  </tr>
-                </tfoot>
-                <tbody>
-                  <?php foreach ($views_dependen as $data) { ?>
-                    <tr>
-                      <td><?= $data['periode'] ?></td>
-                      <td><?= $data['nama_variabel'] ?></td>
-                      <td><?= number_format($data['jumlah']) ?> <i class='bi bi-people-fill'></i></td>
-                    </tr>
-                  <?php } ?>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
 
         <div class="card shadow mb-4 border-0">
           <div class="card-body">
@@ -258,6 +219,69 @@ require_once("../templates/views_top.php"); ?>
           </div>
           <div class="card-body">
             <p>Jumlah penduduk berdasarkan periode <?= $uji_periode ?> adalah: <strong><?= $F_prediksi ?></strong></p>
+          </div>
+        </div>
+        <?php
+        // Ambil data aktual dari database untuk tahun yang diprediksi
+        $sql_actual = "SELECT dataset.*, data_periode.periode, data_variabel.nama_variabel 
+                      FROM dataset 
+                      JOIN data_periode ON dataset.id_periode = data_periode.id_periode 
+                      JOIN data_variabel ON dataset.id_variabel = data_variabel.id_variabel 
+                      WHERE data_periode.id_periode = '$data[id_periode]' AND data_variabel.id_variabel = '$data[id_variabel]'";
+        $result_actual = mysqli_query($conn, $sql_actual);
+
+        // Periksa apakah query berjalan dengan benar
+        if (!$result_actual) {
+          die("Query error: " . mysqli_error($conn));
+        }
+
+        // Ambil nilai aktual dari hasil query
+        $row_actual = mysqli_fetch_assoc($result_actual);
+        $nilai_dependen_actual = $row_actual['jumlah'];
+
+
+        // Hitung error menggunakan metode MAE
+        $error = abs($nilai_dependen_actual - $F_prediksi);
+
+        // Hitung error dalam persen
+        $error_percentage = ($error / $nilai_dependen_actual) * 100;
+
+        // Menampilkan hasil error
+        echo "<div class='card shadow mb-4 border-0'>";
+        echo "<div class='card-body'>";
+        echo "<h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>";
+        echo "<p>Error = " . $error . "</p>";
+        echo "<p>Error dalam persen = " . $error_percentage . "%</p>";
+        echo "</div>";
+        echo "</div>";
+        ?>
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Grafik Exponential Smoothing</h6>
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <canvas id="myAreaChart"></canvas>
+              <?php
+              $currentYear = date('Y');
+              $sql = "SELECT 'Exponential Smoothing' as category, periode, hasil_prediksi FROM hasil_es GROUP BY periode";
+              $result = $conn->query($sql);
+              $dataGrafik = [];
+              if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                  $dataGrafik[] = [
+                    'category' => $row['category'],
+                    'hasil_prediksi' => $row['hasil_prediksi'],
+                    'periode' => $row['periode'],
+                  ];
+                }
+              }
+              ?>
+
+              <script>
+                var dataGrafik = <?php echo json_encode($dataGrafik); ?>;
+              </script>
+            </div>
           </div>
         </div>
       <?php } ?>
