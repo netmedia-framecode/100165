@@ -1048,7 +1048,34 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
     if ($action == "update") {
       $sql = "UPDATE tentang SET deskripsi='$data[deskripsi]'";
     }
-  
+
+    mysqli_query($conn, $sql);
+    return mysqli_affected_rows($conn);
+  }
+
+  function data_uji($conn, $data, $action)
+  {
+    if ($action == "insert") {
+      $check_periode = "SELECT * FROM data_uji WHERE periode='$data[periode]'";
+      $take_periode = mysqli_query($conn, $check_periode);
+      if (mysqli_num_rows($take_periode) > 0) {
+        $message = "Maaf, data uji pada periode yang Anda masukkan sudah ada.";
+        $message_type = "danger";
+        alert($message, $message_type);
+        return false;
+      } else {
+        $sql = "INSERT INTO data_uji(periode,jumlah) VALUES('$data[periode]','$data[data_migrasi]')";
+      }
+    }
+
+    if ($action == "update") {
+      $sql = "UPDATE data_uji SET jumlah='$data[data_migrasi]' WHERE id_uji='$data[id_uji]'";
+    }
+
+    if ($action == "delete") {
+      $sql = "DELETE FROM data_uji WHERE id_uji='$data[id_uji]'";
+    }
+
     mysqli_query($conn, $sql);
     return mysqli_affected_rows($conn);
   }

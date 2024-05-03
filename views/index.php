@@ -124,9 +124,10 @@ require_once("../templates/views_top.php"); ?>
                 $sql = "SELECT 'Exponential Smoothing' as category, periode, hasil_prediksi FROM hasil_es GROUP BY periode";
               }
             } else {
-              $sql = "SELECT 'Regression Linear' as category, periode, hasil_prediksi FROM hasil_rl GROUP BY periode
+              $sql = "SELECT 'Regression Linear' as category, periode, MAX(hasil_prediksi) as hasil_prediksi FROM hasil_rl GROUP BY category, periode
               UNION
-              SELECT 'Exponential Smoothing' as category, periode, hasil_prediksi FROM hasil_es GROUP BY periode";
+              SELECT 'Exponential Smoothing' as category, periode, MAX(hasil_prediksi) as hasil_prediksi FROM hasil_es GROUP BY category, periode;
+              ";
             }
             $result = $conn->query($sql);
             $dataGrafik = [];

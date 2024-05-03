@@ -42,9 +42,12 @@ require_once("templates/top.php");
                         <label for="uji_periode">Periode</label>
                         <select name="uji_periode" class="form-control" id="uji_periode" required>
                           <option value="" selected>Pilih Periode</option>
-                          <?php foreach ($views_periode as $data_select_periode) { ?>
-                            <option value="<?= $data_select_periode['periode'] ?>"><?= $data_select_periode['periode'] ?></option>
-                          <?php } ?>
+                          <?php
+                          $tahun_sekarang = date('Y');
+                          for ($tahun = $tahun_sekarang; $tahun <= $tahun_sekarang + 3; $tahun++) {
+                            echo '<option value="' . $tahun . '">' . $tahun . '</option>';
+                          }
+                          ?>
                         </select>
                       </div>
                       <div class="form-group">
@@ -383,8 +386,8 @@ require_once("templates/top.php");
             Prediksi
           </button>
           <div class="collapse mt-3 <?php if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi_es'])) {
-                                            echo "show";
-                                          } ?>" id="prediksi_es">
+                                      echo "show";
+                                    } ?>" id="prediksi_es">
             <div class="row">
               <div class="col-lg-4">
                 <div class="card shadow mb-3">

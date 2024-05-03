@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Waktu pembuatan: 17 Mar 2024 pada 21.07
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
+-- Host: localhost:3306
+-- Waktu pembuatan: 03 Bulan Mei 2024 pada 00.13
+-- Versi server: 8.3.0
+-- Versi PHP: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,9 +28,9 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `auth` (
-  `id` int(11) NOT NULL,
-  `image` varchar(50) DEFAULT NULL,
-  `bg` varchar(10) DEFAULT NULL
+  `id` int NOT NULL,
+  `image` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `bg` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -47,10 +47,10 @@ INSERT INTO `auth` (`id`, `image`, `bg`) VALUES
 --
 
 CREATE TABLE `dataset` (
-  `id_dataset` int(11) NOT NULL,
-  `id_periode` int(11) NOT NULL,
-  `id_variabel` int(11) NOT NULL,
-  `jumlah` int(11) NOT NULL
+  `id_dataset` int NOT NULL,
+  `id_periode` int NOT NULL,
+  `id_variabel` int NOT NULL,
+  `jumlah` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -82,8 +82,8 @@ INSERT INTO `dataset` (`id_dataset`, `id_periode`, `id_variabel`, `jumlah`) VALU
 --
 
 CREATE TABLE `data_periode` (
-  `id_periode` int(11) NOT NULL,
-  `periode` varchar(15) NOT NULL
+  `id_periode` int NOT NULL,
+  `periode` varchar(15) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -99,7 +99,9 @@ INSERT INTO `data_periode` (`id_periode`, `periode`) VALUES
 (13, '2020'),
 (14, '2021'),
 (15, '2022'),
-(16, '2023');
+(16, '2023'),
+(18, '2024'),
+(19, '2025');
 
 -- --------------------------------------------------------
 
@@ -108,11 +110,18 @@ INSERT INTO `data_periode` (`id_periode`, `periode`) VALUES
 --
 
 CREATE TABLE `data_uji` (
-  `id_uji` int(11) NOT NULL,
-  `periode` int(11) NOT NULL,
-  `variabel_dependen` varchar(10) NOT NULL,
-  `variabel_independen` varchar(10) NOT NULL
+  `id_uji` int NOT NULL,
+  `periode` int NOT NULL,
+  `jumlah` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `data_uji`
+--
+
+INSERT INTO `data_uji` (`id_uji`, `periode`, `jumlah`) VALUES
+(3, 2024, 4226),
+(4, 2025, 4636);
 
 -- --------------------------------------------------------
 
@@ -121,8 +130,8 @@ CREATE TABLE `data_uji` (
 --
 
 CREATE TABLE `data_variabel` (
-  `id_variabel` int(11) NOT NULL,
-  `nama_variabel` varchar(25) NOT NULL
+  `id_variabel` int NOT NULL,
+  `nama_variabel` varchar(25) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -140,13 +149,13 @@ INSERT INTO `data_variabel` (`id_variabel`, `nama_variabel`) VALUES
 --
 
 CREATE TABLE `hasil_es` (
-  `id_rl` int(11) NOT NULL,
-  `periode` int(11) DEFAULT NULL,
-  `nilai_alpha` char(10) DEFAULT NULL,
-  `var_dependen` varchar(50) DEFAULT NULL,
-  `hasil_prediksi` char(10) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `id_rl` int NOT NULL,
+  `periode` int DEFAULT NULL,
+  `nilai_alpha` char(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `var_dependen` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `hasil_prediksi` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -161,7 +170,19 @@ INSERT INTO `hasil_es` (`id_rl`, `periode`, `nilai_alpha`, `var_dependen`, `hasi
 (5, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:34:43', '2024-03-18 03:34:43'),
 (6, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:34:43', '2024-03-18 03:34:43'),
 (7, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:35:36', '2024-03-18 03:35:36'),
-(8, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:35:36', '2024-03-18 03:35:36');
+(8, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:35:36', '2024-03-18 03:35:36'),
+(9, 2024, '0.1', 'jumlah_migrasi', '2230.78538', '2024-04-23 17:04:27', '2024-04-23 17:04:27'),
+(10, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:40:12', '2024-04-24 14:40:12'),
+(11, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:40:32', '2024-04-24 14:40:32'),
+(12, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:41:00', '2024-04-24 14:41:00'),
+(13, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:41:14', '2024-04-24 14:41:14'),
+(14, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:51:35', '2024-04-24 14:51:35'),
+(15, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:52:51', '2024-04-24 14:52:51'),
+(16, 2025, '0.1', 'jumlah_migrasi', '2230.7853893', '2024-05-03 07:21:27', '2024-05-03 07:21:27'),
+(17, 2025, '0.1', 'jumlah_migrasi', '2230.7853893', '2024-05-03 07:21:59', '2024-05-03 07:21:59'),
+(18, 2025, '0.1', 'jumlah_migrasi', '2230.7853893', '2024-05-03 07:23:01', '2024-05-03 07:23:01'),
+(19, 2025, '0.1', 'jumlah_migrasi', '2230.7853893', '2024-05-03 07:30:57', '2024-05-03 07:30:57'),
+(20, 2025, '0.1', 'jumlah_migrasi', '2230.7853893', '2024-05-03 07:31:13', '2024-05-03 07:31:13');
 
 -- --------------------------------------------------------
 
@@ -170,14 +191,14 @@ INSERT INTO `hasil_es` (`id_rl`, `periode`, `nilai_alpha`, `var_dependen`, `hasi
 --
 
 CREATE TABLE `hasil_rl` (
-  `id_rl` int(11) NOT NULL,
-  `periode` int(11) DEFAULT NULL,
-  `jumlah_migrasi` char(10) DEFAULT NULL,
-  `var_independen` varchar(50) DEFAULT NULL,
-  `var_dependen` varchar(50) DEFAULT NULL,
-  `hasil_prediksi` char(10) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `id_rl` int NOT NULL,
+  `periode` int DEFAULT NULL,
+  `jumlah_migrasi` char(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `var_independen` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `var_dependen` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `hasil_prediksi` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -185,24 +206,17 @@ CREATE TABLE `hasil_rl` (
 --
 
 INSERT INTO `hasil_rl` (`id_rl`, `periode`, `jumlah_migrasi`, `var_independen`, `var_dependen`, `hasil_prediksi`, `created_at`, `updated_at`) VALUES
-(1, 2023, '0.2', 'jumlah_migrasi', 'jumlah_penduduk', '212282.730', '2024-03-11 20:30:14', '2024-03-11 20:30:14'),
-(2, 2023, '0.2', 'jumlah_migrasi', 'jumlah_penduduk', '212282.730', '2024-04-18 20:37:53', '2024-03-11 21:17:32'),
-(3, 2024, '1000', 'jumlah_penduduk', 'jumlah_migrasi', '-37362.948', '2024-05-16 20:38:03', '2024-03-12 02:33:19'),
-(4, 2024, '1000', 'jumlah_penduduk', 'jumlah_migrasi', '-37362.948', '2024-03-11 21:03:58', '2024-03-12 02:33:24'),
-(5, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:31:29', '2024-03-18 03:31:29'),
-(6, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:31:29', '2024-03-18 03:31:29'),
-(7, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:33:03', '2024-03-18 03:33:03'),
-(8, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:33:03', '2024-03-18 03:33:03'),
-(9, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:33:48', '2024-03-18 03:33:48'),
-(10, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:33:48', '2024-03-18 03:33:48'),
-(11, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:11', '2024-03-18 03:34:11'),
-(12, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:11', '2024-03-18 03:34:11'),
-(13, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:25', '2024-03-18 03:34:25'),
-(14, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:25', '2024-03-18 03:34:25'),
-(15, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:43', '2024-03-18 03:34:43'),
-(16, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:34:43', '2024-03-18 03:34:43'),
-(17, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:35:36', '2024-03-18 03:35:36'),
-(18, 2023, '4500', 'jumlah_penduduk', 'jumlah_migrasi', '-36735.568', '2024-03-18 03:35:36', '2024-03-18 03:35:36');
+(1, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:17:32', '2024-05-03 07:17:32'),
+(2, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:19:40', '2024-05-03 07:19:40'),
+(3, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:20:35', '2024-05-03 07:20:35'),
+(4, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:26:40', '2024-05-03 07:26:40'),
+(5, 2025, '2500', 'jumlah_penduduk', 'jumlah_migrasi', '-37094.071089426', '2024-05-03 07:27:10', '2024-05-03 07:27:10'),
+(6, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:29:47', '2024-05-03 07:29:47'),
+(7, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:30:39', '2024-05-03 07:30:39'),
+(8, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:30:49', '2024-05-03 07:30:49'),
+(9, 2025, '2500', 'jumlah_penduduk', 'jumlah_migrasi', '-37094.071089426', '2024-05-03 07:31:20', '2024-05-03 07:31:20'),
+(10, 2025, '2500', 'jumlah_penduduk', 'jumlah_migrasi', '-37094.071089426', '2024-05-03 07:32:02', '2024-05-03 07:32:02'),
+(11, 2025, '2500', 'jumlah_penduduk', 'jumlah_migrasi', '-37094.071089426', '2024-05-03 07:32:39', '2024-05-03 07:32:39');
 
 -- --------------------------------------------------------
 
@@ -211,13 +225,13 @@ INSERT INTO `hasil_rl` (`id_rl`, `periode`, `jumlah_migrasi`, `var_independen`, 
 --
 
 CREATE TABLE `kontak` (
-  `id_kontak` int(11) NOT NULL,
-  `nama` varchar(75) DEFAULT NULL,
-  `email` varchar(50) DEFAULT NULL,
-  `phone` char(12) DEFAULT NULL,
-  `pesan` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `id_kontak` int NOT NULL,
+  `nama` varchar(75) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `phone` char(12) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `pesan` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -227,8 +241,8 @@ CREATE TABLE `kontak` (
 --
 
 CREATE TABLE `tentang` (
-  `id` int(11) NOT NULL,
-  `deskripsi` text DEFAULT NULL
+  `id` int NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -245,17 +259,17 @@ INSERT INTO `tentang` (`id`, `deskripsi`) VALUES
 --
 
 CREATE TABLE `users` (
-  `id_user` int(11) NOT NULL,
-  `id_role` int(11) DEFAULT NULL,
-  `id_active` int(11) DEFAULT 2,
-  `en_user` varchar(75) DEFAULT NULL,
-  `token` char(6) DEFAULT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `image` varchar(100) DEFAULT 'default.svg',
-  `email` varchar(75) DEFAULT NULL,
-  `password` varchar(75) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id_user` int NOT NULL,
+  `id_role` int DEFAULT NULL,
+  `id_active` int DEFAULT '2',
+  `en_user` varchar(75) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `token` char(6) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_general_ci DEFAULT 'default.svg',
+  `email` varchar(75) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `password` varchar(75) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -263,7 +277,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id_user`, `id_role`, `id_active`, `en_user`, `token`, `name`, `image`, `email`, `password`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, NULL, NULL, 'admin', 'default.svg', 'admin@gmail.com', '$2y$10$//KMATh3ibPoI3nHFp7x/u7vnAbo2WyUgmI4x0CVVrH8ajFhMvbjG', '2023-12-11 12:44:17', '2023-12-11 12:44:17');
+(1, 1, 1, NULL, NULL, 'admin', 'default.svg', 'admin@gmail.com', '$2y$10$//KMATh3ibPoI3nHFp7x/u7vnAbo2WyUgmI4x0CVVrH8ajFhMvbjG', '2023-12-11 12:44:17', '2023-12-11 12:44:17'),
+(2, 4, 2, '2y10zTwts8P9rytW7Gvydm73uu7O89qAYx4uy7rTgo5rbdeZeeL1PWu', '451512', 'Netmedia Framecode', 'default.svg', 'netmediaframecode@gmail.com', '$2y$10$Eeo5RAPIi9ZTR3BV/YW7U./OL632X8v9nRTV6TxE6nRGpiZ/s2Mjy', '2024-04-04 13:40:37', '2024-04-04 13:40:37');
 
 --
 -- Trigger `users`
@@ -287,9 +302,9 @@ DELIMITER ;
 --
 
 CREATE TABLE `user_access_menu` (
-  `id_access_menu` int(11) NOT NULL,
-  `id_role` int(11) DEFAULT NULL,
-  `id_menu` int(11) DEFAULT NULL
+  `id_access_menu` int NOT NULL,
+  `id_role` int DEFAULT NULL,
+  `id_menu` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -310,9 +325,9 @@ INSERT INTO `user_access_menu` (`id_access_menu`, `id_role`, `id_menu`) VALUES
 --
 
 CREATE TABLE `user_access_sub_menu` (
-  `id_access_sub_menu` int(11) NOT NULL,
-  `id_role` int(11) DEFAULT NULL,
-  `id_sub_menu` int(11) DEFAULT NULL
+  `id_access_sub_menu` int NOT NULL,
+  `id_role` int DEFAULT NULL,
+  `id_sub_menu` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -320,7 +335,6 @@ CREATE TABLE `user_access_sub_menu` (
 --
 
 INSERT INTO `user_access_sub_menu` (`id_access_sub_menu`, `id_role`, `id_sub_menu`) VALUES
-(1, 1, 1),
 (2, 1, 2),
 (3, 1, 3),
 (4, 1, 4),
@@ -330,10 +344,10 @@ INSERT INTO `user_access_sub_menu` (`id_access_sub_menu`, `id_role`, `id_sub_men
 (45, 1, 17),
 (51, 1, 73),
 (53, 1, 75),
-(54, 1, 76),
 (57, 1, 15),
 (58, 1, 78),
-(59, 1, 79);
+(59, 1, 79),
+(61, 1, 80);
 
 -- --------------------------------------------------------
 
@@ -342,8 +356,8 @@ INSERT INTO `user_access_sub_menu` (`id_access_sub_menu`, `id_role`, `id_sub_men
 --
 
 CREATE TABLE `user_menu` (
-  `id_menu` int(11) NOT NULL,
-  `menu` varchar(50) DEFAULT NULL
+  `id_menu` int NOT NULL,
+  `menu` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -364,8 +378,8 @@ INSERT INTO `user_menu` (`id_menu`, `menu`) VALUES
 --
 
 CREATE TABLE `user_role` (
-  `id_role` int(11) NOT NULL,
-  `role` varchar(35) DEFAULT NULL
+  `id_role` int NOT NULL,
+  `role` varchar(35) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -383,8 +397,8 @@ INSERT INTO `user_role` (`id_role`, `role`) VALUES
 --
 
 CREATE TABLE `user_status` (
-  `id_status` int(11) NOT NULL,
-  `status` varchar(35) DEFAULT NULL
+  `id_status` int NOT NULL,
+  `status` varchar(35) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -402,12 +416,12 @@ INSERT INTO `user_status` (`id_status`, `status`) VALUES
 --
 
 CREATE TABLE `user_sub_menu` (
-  `id_sub_menu` int(11) NOT NULL,
-  `id_menu` int(11) DEFAULT NULL,
-  `id_active` int(11) DEFAULT 2,
-  `title` varchar(50) DEFAULT NULL,
-  `url` varchar(50) DEFAULT NULL,
-  `icon` varchar(50) DEFAULT NULL
+  `id_sub_menu` int NOT NULL,
+  `id_menu` int DEFAULT NULL,
+  `id_active` int DEFAULT '2',
+  `title` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `url` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `icon` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -425,10 +439,10 @@ INSERT INTO `user_sub_menu` (`id_sub_menu`, `id_menu`, `id_active`, `title`, `ur
 (17, 3, 1, 'Variabel', 'variabel', 'fas fa-list-ol'),
 (19, 3, 1, 'Periode', 'periode', 'fas fa-list-ol'),
 (73, 3, 1, 'Dataset', 'dataset', 'fas fa-list-ol'),
-(75, 3, 1, 'Regression Linear', 'regression-linear', 'fas fa-calculator'),
-(76, 3, 1, 'Exponential Smoothing', 'exponential-smoothing', 'fas fa-calculator'),
+(75, 3, 1, 'Data Uji', 'data-uji', 'fas fa-list'),
 (78, 5, 1, 'Tentang', 'tentang', 'fas fa-list-ul'),
-(79, 5, 1, 'Kontak', 'kontak', 'fas fa-comments');
+(79, 5, 1, 'Kontak', 'kontak', 'fas fa-comments'),
+(80, 3, 1, 'Prediksi', 'prediksi', 'fas fa-calculator');
 
 --
 -- Indexes for dumped tables
@@ -548,97 +562,97 @@ ALTER TABLE `user_sub_menu`
 -- AUTO_INCREMENT untuk tabel `auth`
 --
 ALTER TABLE `auth`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `dataset`
 --
 ALTER TABLE `dataset`
-  MODIFY `id_dataset` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id_dataset` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT untuk tabel `data_periode`
 --
 ALTER TABLE `data_periode`
-  MODIFY `id_periode` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_periode` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT untuk tabel `data_uji`
 --
 ALTER TABLE `data_uji`
-  MODIFY `id_uji` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_uji` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `data_variabel`
 --
 ALTER TABLE `data_variabel`
-  MODIFY `id_variabel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id_variabel` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT untuk tabel `hasil_es`
 --
 ALTER TABLE `hasil_es`
-  MODIFY `id_rl` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_rl` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT untuk tabel `hasil_rl`
 --
 ALTER TABLE `hasil_rl`
-  MODIFY `id_rl` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id_rl` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT untuk tabel `kontak`
 --
 ALTER TABLE `kontak`
-  MODIFY `id_kontak` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_kontak` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `tentang`
 --
 ALTER TABLE `tentang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-  MODIFY `id_access_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_access_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_access_sub_menu`
 --
 ALTER TABLE `user_access_sub_menu`
-  MODIFY `id_access_sub_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id_access_sub_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_menu`
 --
 ALTER TABLE `user_menu`
-  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_role`
 --
 ALTER TABLE `user_role`
-  MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_role` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_status`
 --
 ALTER TABLE `user_status`
-  MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_status` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
-  MODIFY `id_sub_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id_sub_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -655,21 +669,21 @@ ALTER TABLE `dataset`
 -- Ketidakleluasaan untuk tabel `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `user_role` (`id_role`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`id_active`) REFERENCES `user_status` (`id_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `user_role` (`id_role`),
+  ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`id_active`) REFERENCES `user_status` (`id_status`);
 
 --
 -- Ketidakleluasaan untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-  ADD CONSTRAINT `user_access_menu_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `user_role` (`id_role`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `user_access_menu_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `user_role` (`id_role`),
   ADD CONSTRAINT `user_access_menu_ibfk_2` FOREIGN KEY (`id_menu`) REFERENCES `user_menu` (`id_menu`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `user_access_sub_menu`
 --
 ALTER TABLE `user_access_sub_menu`
-  ADD CONSTRAINT `user_access_sub_menu_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `user_role` (`id_role`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `user_access_sub_menu_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `user_role` (`id_role`),
   ADD CONSTRAINT `user_access_sub_menu_ibfk_2` FOREIGN KEY (`id_sub_menu`) REFERENCES `user_sub_menu` (`id_sub_menu`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -677,7 +691,7 @@ ALTER TABLE `user_access_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
   ADD CONSTRAINT `user_sub_menu_ibfk_1` FOREIGN KEY (`id_menu`) REFERENCES `user_menu` (`id_menu`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_sub_menu_ibfk_2` FOREIGN KEY (`id_active`) REFERENCES `user_status` (`id_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `user_sub_menu_ibfk_2` FOREIGN KEY (`id_active`) REFERENCES `user_status` (`id_status`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

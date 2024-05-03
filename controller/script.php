@@ -9,6 +9,11 @@ require_once("functions.php");
 $messageTypes = ["success", "info", "warning", "danger", "dark"];
 
 $baseURL = "http://$_SERVER[HTTP_HOST]/apps/tugas/prediksi_pertumbuhan_penduduk/";
+$hostname = $_SERVER['HTTP_HOST'];
+$port = $_SERVER['SERVER_PORT'];
+if (strpos($hostname, 'apps.test') !== false && $port == 8080) {
+  $baseURL = str_replace('/apps/', '/', $baseURL);
+}
 $name_website = "Prediksi Pertumbuhan Penduduk";
 
 $select_auth = "SELECT * FROM auth";
@@ -178,9 +183,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Profil Anda berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: profil");
       exit();
     }
   }
@@ -192,9 +195,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Setting pada system login berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: setting");
       exit();
     }
   }
@@ -215,9 +216,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "data users berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: users");
       exit();
     }
   }
@@ -229,9 +228,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Role baru berhasil ditambahkan.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: role");
       exit();
     }
   }
@@ -243,9 +240,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Role " . $_POST['roleOld'] . " berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: role");
       exit();
     }
   }
@@ -257,9 +252,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Role " . $_POST['role'] . " berhasil dihapus.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: role");
       exit();
     }
   }
@@ -277,9 +270,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Menu baru berhasil ditambahkan.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: menu");
       exit();
     }
   }
@@ -291,9 +282,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Menu " . $_POST['menuOld'] . " berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: menu");
       exit();
     }
   }
@@ -305,9 +294,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Menu " . $_POST['menu'] . " berhasil dihapus.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: menu");
       exit();
     }
   }
@@ -331,9 +318,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Sub Menu baru berhasil ditambahkan.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: sub-menu");
       exit();
     }
   }
@@ -345,9 +330,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Sub Menu " . $_POST['titleOld'] . " berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: sub-menu");
       exit();
     }
   }
@@ -359,16 +342,14 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Sub Menu " . $_POST['title'] . " berhasil dihapus.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: sub-menu");
       exit();
     }
   }
 
   $user_access_menu = "SELECT user_access_menu.*, user_role.role, user_menu.menu
                                 FROM user_access_menu 
-                                JOIN user_role ON user_access_menu.id_role=.user_role.id_role 
+                                JOIN user_role ON user_access_menu.id_role=user_role.id_role 
                                 JOIN user_menu ON user_access_menu.id_menu=user_menu.id_menu
                               ";
   $views_user_access_menu = mysqli_query($conn, $user_access_menu);
@@ -385,9 +366,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Akses ke menu berhasil ditambahkan.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: menu-access");
       exit();
     }
   }
@@ -399,9 +378,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Akses menu " . $_POST['menu'] . " berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: menu-access");
       exit();
     }
   }
@@ -413,16 +390,14 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Akses menu " . $_POST['menu'] . " berhasil dihapus.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: menu-access");
       exit();
     }
   }
 
   $user_access_sub_menu = "SELECT user_access_sub_menu.*, user_role.role, user_sub_menu.title
                                 FROM user_access_sub_menu 
-                                JOIN user_role ON user_access_sub_menu.id_role=.user_role.id_role 
+                                JOIN user_role ON user_access_sub_menu.id_role=user_role.id_role 
                                 JOIN user_sub_menu ON user_access_sub_menu.id_sub_menu=user_sub_menu.id_sub_menu
                               ";
   $views_user_access_sub_menu = mysqli_query($conn, $user_access_sub_menu);
@@ -440,9 +415,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Akses ke sub menu berhasil ditambahkan.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: sub-menu-access");
       exit();
     }
   }
@@ -454,9 +427,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Akses sub menu " . $_POST['title'] . " berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: sub-menu-access");
       exit();
     }
   }
@@ -468,9 +439,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Akses sub menu " . $_POST['title'] . " berhasil dihapus.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: sub-menu-access");
       exit();
     }
   }
@@ -483,9 +452,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Variabel baru berhasil ditambahkan.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: variabel");
       exit();
     }
   }
@@ -497,9 +464,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Variabel " . $_POST['nama_variabelOld'] . " berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: variabel");
       exit();
     }
   }
@@ -511,9 +476,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Variabel " . $_POST['nama_variabel'] . " berhasil dihapus.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: variabel");
       exit();
     }
   }
@@ -534,9 +497,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Periode baru berhasil ditambahkan.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: periode");
       exit();
     }
   }
@@ -548,9 +509,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Periode " . $_POST['periodeOld'] . " berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: periode");
       exit();
     }
   }
@@ -562,9 +521,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Periode " . $_POST['periode'] . " berhasil dihapus.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: periode");
       exit();
     }
   }
@@ -579,9 +536,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Dataset baru berhasil ditambahkan.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: dataset");
       exit();
     }
   }
@@ -593,9 +548,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Dataset periode " . $_POST['periode'] . " dengan nama variabel " . $_POST['nama_variabel'] . " berhasil diubah.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: dataset");
       exit();
     }
   }
@@ -607,9 +560,7 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       $message = "Dataset periode " . $_POST['periode'] . " dengan nama variabel " . $_POST['nama_variabel'] . " berhasil dihapus.";
       $message_type = "success";
       alert($message, $message_type);
-      $to_page = strtolower($_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"]);
-      $to_page = str_replace(" ", "-", $to_page);
-      header("Location: $to_page");
+      header("Location: dataset");
       exit();
     }
   }
@@ -635,5 +586,83 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       header("Location: kontak");
       exit();
     }
+  }
+
+  $data_uji = "SELECT * FROM data_uji ORDER BY periode ASC";
+  $views_data_uji = mysqli_query($conn, $data_uji);
+  if (isset($_POST["add_data_uji"])) {
+    $validated_post = array_map(function ($value) use ($conn) {
+      return valid($conn, $value);
+    }, $_POST);
+    if (data_uji($conn, $validated_post, $action = 'insert', $baseURL) > 0) {
+      $message = "Data uji baru berhasil ditambahkan.";
+      $message_type = "success";
+      alert($message, $message_type);
+      header("Location: data-uji");
+      exit();
+    }
+  }
+  if (isset($_POST["edit_data_uji"])) {
+    $validated_post = array_map(function ($value) use ($conn) {
+      return valid($conn, $value);
+    }, $_POST);
+    if (data_uji($conn, $validated_post, $action = 'update', $baseURL) > 0) {
+      $message = "Data uji periode " . $_POST['periode'] . " berhasil diubah.";
+      $message_type = "success";
+      alert($message, $message_type);
+      header("Location: data-uji");
+      exit();
+    }
+  }
+  if (isset($_POST["delete_data_uji"])) {
+    $validated_post = array_map(function ($value) use ($conn) {
+      return valid($conn, $value);
+    }, $_POST);
+    if (data_uji($conn, $validated_post, $action = 'delete', $baseURL) > 0) {
+      $message = "Data uji periode " . $_POST['periode'] . " berhasil dihapus.";
+      $message_type = "success";
+      alert($message, $message_type);
+      header("Location: data-uji");
+      exit();
+    }
+  }
+
+  if (isset($_POST["prediksi"])) {
+    $uji_periode = valid($conn, $_POST['uji_periode']);
+    $metode = valid($conn, $_POST['metode']);
+    $nilai_alpha = valid($conn, $_POST['nilai_alpha']);
+    $variabel_dependen = valid($conn, $_POST['variabel_dependen']);
+    $variabel_independen = valid($conn, $_POST['variabel_independen']);
+    $check_data_uji_periode = "SELECT * FROM data_uji WHERE periode='$uji_periode'";
+    $views_data_uji_periode = mysqli_query($conn, $check_data_uji_periode);
+    if ($metode == 1) {
+      $nama_metode = "Regression Linear";
+    } else if ($metode == 2) {
+      $nama_metode = "Single Exponential Smoothing";
+    }
+    if (mysqli_num_rows($views_data_uji_periode) == 0) {
+      $message = "Maaf, anda belum memasukan data uji untuk periode $uji_periode.";
+      $message_type = "danger";
+      alert($message, $message_type);
+      header("Location: prediksi");
+      exit();
+    } else if (mysqli_num_rows($views_data_uji_periode) > 0) {
+      $data = mysqli_fetch_assoc($views_data_uji_periode);
+      $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi'] = [
+        'uji_periode' => $uji_periode,
+        'metode' => $metode,
+        'nilai_alpha' => $nilai_alpha,
+        'data_migrasi' => $data['jumlah'],
+        'variabel_dependen' => $variabel_dependen,
+        'variabel_independen' => $variabel_independen
+      ];
+      header("Location: prediksi");
+      exit();
+    }
+  }
+  if (isset($_POST['re_prediksi'])) {
+    unset($_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi']);
+    header("Location: prediksi");
+    exit();
   }
 }
