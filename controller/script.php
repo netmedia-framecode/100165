@@ -637,22 +637,31 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
     $views_data_uji_periode = mysqli_query($conn, $check_data_uji_periode);
     if ($metode == 1) {
       $nama_metode = "Regression Linear";
+      if (mysqli_num_rows($views_data_uji_periode) == 0) {
+        $message = "Maaf, anda belum memasukan data uji untuk periode $uji_periode.";
+        $message_type = "danger";
+        alert($message, $message_type);
+        header("Location: prediksi");
+        exit();
+      } else if (mysqli_num_rows($views_data_uji_periode) > 0) {
+        $data = mysqli_fetch_assoc($views_data_uji_periode);
+        $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi'] = [
+          'uji_periode' => $uji_periode,
+          'metode' => $metode,
+          'nilai_alpha' => $nilai_alpha,
+          'data_migrasi' => $data['jumlah'],
+          'variabel_dependen' => $variabel_dependen,
+          'variabel_independen' => $variabel_independen
+        ];
+        header("Location: prediksi");
+        exit();
+      }
     } else if ($metode == 2) {
-      $nama_metode = "Single Exponential Smoothing";
-    }
-    if (mysqli_num_rows($views_data_uji_periode) == 0) {
-      $message = "Maaf, anda belum memasukan data uji untuk periode $uji_periode.";
-      $message_type = "danger";
-      alert($message, $message_type);
-      header("Location: prediksi");
-      exit();
-    } else if (mysqli_num_rows($views_data_uji_periode) > 0) {
-      $data = mysqli_fetch_assoc($views_data_uji_periode);
       $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi'] = [
         'uji_periode' => $uji_periode,
         'metode' => $metode,
         'nilai_alpha' => $nilai_alpha,
-        'data_migrasi' => $data['jumlah'],
+        'data_migrasi' => '',
         'variabel_dependen' => $variabel_dependen,
         'variabel_independen' => $variabel_independen
       ];
