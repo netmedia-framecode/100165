@@ -37,7 +37,7 @@ if (isset($_POST['add_kontak'])) {
   }
 }
 
-$periode = "SELECT * FROM data_periode ORDER BY periode ASC";
+$periode = "SELECT * FROM data_periode ORDER BY periode DESC";
 $views_periode = mysqli_query($conn, $periode);
 
 $variabel = "SELECT * FROM data_variabel ORDER BY nama_variabel ASC";
@@ -633,41 +633,24 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
     $nilai_alpha = valid($conn, $_POST['nilai_alpha']);
     $variabel_dependen = valid($conn, $_POST['variabel_dependen']);
     $variabel_independen = valid($conn, $_POST['variabel_independen']);
-    $check_data_uji_periode = "SELECT * FROM data_uji WHERE periode='$uji_periode'";
-    $views_data_uji_periode = mysqli_query($conn, $check_data_uji_periode);
     if ($metode == 1) {
-      $nama_metode = "Regression Linear";
-      if (mysqli_num_rows($views_data_uji_periode) == 0) {
-        $message = "Maaf, anda belum memasukan data uji untuk periode $uji_periode.";
-        $message_type = "danger";
-        alert($message, $message_type);
-        header("Location: prediksi");
-        exit();
-      } else if (mysqli_num_rows($views_data_uji_periode) > 0) {
-        $data = mysqli_fetch_assoc($views_data_uji_periode);
-        $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi'] = [
-          'uji_periode' => $uji_periode,
-          'metode' => $metode,
-          'nilai_alpha' => $nilai_alpha,
-          'data_migrasi' => $data['jumlah'],
-          'variabel_dependen' => $variabel_dependen,
-          'variabel_independen' => $variabel_independen
-        ];
-        header("Location: prediksi");
-        exit();
-      }
+      $check_data_uji_periode = "SELECT * FROM dataset JOIN data_periode ON dataset.id_periode=data_periode.id_periode ORDER BY data_periode.periode DESC LIMIT 1";
+      $views_data_uji_periode = mysqli_query($conn, $check_data_uji_periode);
+      $data = mysqli_fetch_assoc($views_data_uji_periode);
+      $data_migrasi = $data['jumlah'];
     } else if ($metode == 2) {
-      $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi'] = [
-        'uji_periode' => $uji_periode,
-        'metode' => $metode,
-        'nilai_alpha' => $nilai_alpha,
-        'data_migrasi' => '',
-        'variabel_dependen' => $variabel_dependen,
-        'variabel_independen' => $variabel_independen
-      ];
-      header("Location: prediksi");
-      exit();
+      $data_migrasi = '';
     }
+    $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi'] = [
+      'uji_periode' => $uji_periode,
+      'metode' => $metode,
+      'nilai_alpha' => $nilai_alpha,
+      'data_migrasi' => $data_migrasi,
+      'variabel_dependen' => $variabel_dependen,
+      'variabel_independen' => $variabel_independen
+    ];
+    header("Location: prediksi");
+    exit();
   }
   if (isset($_POST['re_prediksi'])) {
     unset($_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi']);
