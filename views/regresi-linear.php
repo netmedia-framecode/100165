@@ -1,8 +1,33 @@
 <hr>
 <div class="row">
-  <div class="col-lg-6">
-    <h5>Memprediksi Jumlah Penduduk</h5>
-    <hr>
+  <div class="col-lg-4">
+    <div class="card shadow mb-3">
+      <div class="card-header shadow">
+        <h5 class="card-title">Rumus Regresi Linear</h5>
+      </div>
+      <div class="card-body">
+        <p>Y = b<sub>0</sub> + b<sub>1</sub>X</p>
+        <p>Dimana:</p>
+        <ul>
+          <li><strong>Y</strong> adalah variabel dependen (output).</li>
+          <li><strong>X</strong> adalah variabel independen (input).</li>
+          <li><strong>b<sub>0</sub></strong> adalah intersep (nilai Y ketika X = 0).</li>
+          <li><strong>b<sub>1</sub></strong> adalah koefisien regresi (perubahan Y untuk setiap perubahan satu unit X).</li>
+        </ul>
+
+        <h6 class="font-weight-bold">Perhitungan b0 dan b1</h6>
+        <p>Untuk menghitung b<sub>0</sub> dan b<sub>1</sub>, Anda dapat menggunakan rumus berikut:</p>
+        <ul>
+          <li><strong>b<sub>1</sub> = Σ((X - X̄)(Y - Ȳ)) / Σ((X - X̄)<sup>2</sup>)</strong></li>
+          <li><strong>b<sub>0</sub> = Ȳ - b<sub>1</sub>X̄</strong></li>
+          <li><strong>Σ</strong> adalah simbol sigma yang menunjukkan penjumlahan.</li>
+          <li><strong>X̄</strong> adalah rata-rata dari variabel independen (X).</li>
+          <li><strong>Ȳ</strong> adalah rata-rata dari variabel dependen (Y).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
     <?php $uji_periode = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['uji_periode'];
     $data_migrasi = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['data_migrasi'];
     $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['variabel_dependen'];
@@ -281,10 +306,6 @@
     echo "</div>";
     echo "</div>";
     ?>
-  </div>
-  <div class="col-lg-6">
-    <h5>Memprediksi Jumlah Migrasi</h5>
-    <hr>
   </div>
   <div class="col-md-12">
     <div class="card shadow mb-4">

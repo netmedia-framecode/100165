@@ -630,22 +630,23 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
   if (isset($_POST["prediksi"])) {
     $uji_periode = valid($conn, $_POST['uji_periode']);
     $metode = valid($conn, $_POST['metode']);
+    $migrasi = valid($conn, $_POST['migrasi']);
     $nilai_alpha = valid($conn, $_POST['nilai_alpha']);
     $variabel_dependen = valid($conn, $_POST['variabel_dependen']);
     $variabel_independen = valid($conn, $_POST['variabel_independen']);
-    if ($metode == 1) {
-      $check_data_uji_periode = "SELECT * FROM dataset JOIN data_periode ON dataset.id_periode=data_periode.id_periode ORDER BY data_periode.periode DESC LIMIT 1";
-      $views_data_uji_periode = mysqli_query($conn, $check_data_uji_periode);
-      $data = mysqli_fetch_assoc($views_data_uji_periode);
-      $data_migrasi = $data['jumlah'];
-    } else if ($metode == 2) {
-      $data_migrasi = '';
-    }
+    // if ($metode == 1) {
+      // $check_data_uji_periode = "SELECT * FROM dataset JOIN data_periode ON dataset.id_periode=data_periode.id_periode ORDER BY data_periode.periode DESC LIMIT 1";
+      // $views_data_uji_periode = mysqli_query($conn, $check_data_uji_periode);
+      // $data = mysqli_fetch_assoc($views_data_uji_periode);
+    //   $data_migrasi = $migrasi;
+    // } else if ($metode == 2) {
+    //   $data_migrasi = '';
+    // }
     $_SESSION["project_prediksi_pertumbuhan_penduduk"]['prediksi'] = [
       'uji_periode' => $uji_periode,
       'metode' => $metode,
       'nilai_alpha' => $nilai_alpha,
-      'data_migrasi' => $data_migrasi,
+      'data_migrasi' => $migrasi,
       'variabel_dependen' => $variabel_dependen,
       'variabel_independen' => $variabel_independen
     ];

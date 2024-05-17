@@ -2,6 +2,8 @@
 $_SESSION["project_prediksi_pertumbuhan_penduduk"]["name_page"] = "Prediksi";
 require_once("../templates/views_top.php"); ?>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
@@ -37,22 +39,30 @@ require_once("../templates/views_top.php"); ?>
                 <option value="2">Single Exponential Smoothing</option>
               </select>
             </div>
+            <div class="form-group" id="migrasi-container">
+              <label for="migrasi">Data Migrasi</label>
+              <input type="number" name="migrasi" value="1" class="form-control" id="migrasi" min="1" required>
+            </div>
             <div class="form-group for-ses" id="alpha-container">
               <label for="nilai_alpha">Nilai Alpha</label>
               <input type="range" name="nilai_alpha" class="form-control" id="nilai_alpha" value="0.1" min="0.1" max="1" step="0.1" required>
               <span id="nilai_migrasi">0.1</span>
-              <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
               <script>
                 $(document).ready(function() {
                   // Sembunyikan elemen nilai_alpha saat halaman dimuat
+                  $("#migrasi-container").hide();
                   $("#alpha-container").hide();
 
                   $("#metode").on("change", function() {
+                    if ($(this).val() === "1") {
+                      $("#migrasi-container").show();
+                    } else {
+                      $("#migrasi-container").hide();
+                    }
+
                     if ($(this).val() === "2") {
-                      // Jika metode yang dipilih adalah Single Exponential Smoothing, sembunyikan elemen nilai_alpha
                       $("#alpha-container").show();
                     } else {
-                      // Jika metode yang dipilih bukan Single Exponential Smoothing, sembunyikan elemen nilai_alpha
                       $("#alpha-container").hide();
                     }
                   });
@@ -71,31 +81,6 @@ require_once("../templates/views_top.php"); ?>
     <?php if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["prediksi"])) {
       if ($_SESSION["project_prediksi_pertumbuhan_penduduk"]["prediksi"]["metode"] == 1) { ?>
         <div class="col-lg-6">
-          <div class="card shadow mb-3">
-            <div class="card-header shadow">
-              <h5 class="card-title">Rumus Regresi Linear</h5>
-            </div>
-            <div class="card-body">
-              <p>Y = b<sub>0</sub> + b<sub>1</sub>X</p>
-              <p>Dimana:</p>
-              <ul>
-                <li><strong>Y</strong> adalah variabel dependen (output).</li>
-                <li><strong>X</strong> adalah variabel independen (input).</li>
-                <li><strong>b<sub>0</sub></strong> adalah intersep (nilai Y ketika X = 0).</li>
-                <li><strong>b<sub>1</sub></strong> adalah koefisien regresi (perubahan Y untuk setiap perubahan satu unit X).</li>
-              </ul>
-
-              <h6 class="font-weight-bold">Perhitungan b0 dan b1</h6>
-              <p>Untuk menghitung b<sub>0</sub> dan b<sub>1</sub>, Anda dapat menggunakan rumus berikut:</p>
-              <ul>
-                <li><strong>b<sub>1</sub> = Σ((X - X̄)(Y - Ȳ)) / Σ((X - X̄)<sup>2</sup>)</strong></li>
-                <li><strong>b<sub>0</sub> = Ȳ - b<sub>1</sub>X̄</strong></li>
-                <li><strong>Σ</strong> adalah simbol sigma yang menunjukkan penjumlahan.</li>
-                <li><strong>X̄</strong> adalah rata-rata dari variabel independen (X).</li>
-                <li><strong>Ȳ</strong> adalah rata-rata dari variabel dependen (Y).</li>
-              </ul>
-            </div>
-          </div>
         </div>
     <?php }
     } ?>
