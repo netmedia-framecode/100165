@@ -207,25 +207,6 @@
             <tbody>
               <?php
               if (isset($nilai_independen)) {
-                // Inisialisasi variabel untuk menghitung mean dan perbedaan
-                $mean_x = array_sum($nilai_independen) / count($nilai_independen);
-                $mean_y = array_sum($nilai_dependen) / count($nilai_dependen);
-                $denominator = 0;
-                $numerator = 0;
-
-                // Hitung denominator dan numerator untuk regresi
-                for ($i = 0; $i < count($nilai_independen); $i++) {
-                  $diff_x = $nilai_independen[$i] - $mean_x;
-                  $diff_y = $nilai_dependen[$i] - $mean_y;
-                  $denominator += pow($diff_x, 2);
-                  $numerator += $diff_x * $diff_y;
-                }
-
-                // Hitung koefisien regresi (b0 dan b1)
-                $b1 = $numerator / $denominator;
-                $b0 = $mean_y - $b1 * $mean_x;
-
-                // Tampilkan data latih dalam tabel
                 for ($i = 0; $i < count($nilai_independen); $i++) {
                   echo "<tr>";
                   echo "<td>" . $periode[$i] . "</td>";
@@ -236,39 +217,8 @@
                   echo "<td>" . $diff_x . "</td>";
                   echo "<td>" . $diff_y . "</td>";
                   echo "</tr>";
-                }
-
-                // Menambahkan hasil prediksi tahun-tahun berikutnya ke dalam tabel
-                $last_data = end($periode);
-                $constant_independent = end($nilai_independen);  // Gunakan nilai independen yang konstan
-                $prev_forecast = end($nilai_dependen); // Inisialisasi hasil prediksi pertama
-
-                for ($year = $last_data + 1; $year <= $uji_periode; $year++) {
-                  // Prediksi nilai dependen menggunakan regresi linier
-                  $forecast = $b0 + $b1 * $constant_independent;
-
-                  // Tambahkan hasil prediksi ke dalam tabel
-                  echo "<tr>";
-                  echo "<td>" . $year . "</td>"; // Tahun prediksi berikutnya
-                  echo "<td>" . $constant_independent . "</td>"; // Nilai independen untuk tahun prediksi berikutnya
-                  echo "<td>" . $forecast . "</td>"; // Nilai dependen untuk tahun prediksi berikutnya
-                  $diff_x = $constant_independent - $mean_x;
-                  $diff_y = $forecast - $mean_y;
-                  echo "<td>" . $diff_x . "</td>"; // X - X̄ untuk prediksi berikutnya
-                  echo "<td>" . $diff_y . "</td>"; // Y - Ȳ untuk prediksi berikutnya
-                  echo "</tr>";
-
-                  // Update prev_forecast untuk iterasi berikutnya
-                  $prev_forecast = $forecast;
-
-                  $check_hasil_rl = "SELECT * FROM hasil_rl WHERE periode='$uji_periode'";
-                  $data_rl = mysqli_query($conn, $check_hasil_rl);
-                  if (mysqli_num_rows($data_rl) == 0) {
-                    $sql = "INSERT INTO hasil_rl(periode,jumlah_migrasi,var_independen,var_dependen,hasil_prediksi) VALUES('$uji_periode','$data_migrasi','$variabel_independen','$variabel_dependen','$prev_forecast')";
-                  } else if (mysqli_num_rows($data_rl) > 0) {
-                    $sql = "UPDATE hasil_rl SET jumlah_migrasi='$data_migrasi', hasil_prediksi='$prev_forecast' WHERE periode='$uji_periode'";
-                  }
-                  mysqli_query($conn, $sql);
+                  $denominator += pow($diff_x, 2);
+                  $numerator += $diff_x * $diff_y;
                 }
               }
               ?>
@@ -277,7 +227,6 @@
         </div>
       </div>
     </div>
-
 
     <?php
     $mean_x = array_sum($nilai_independen) / count($nilai_independen);
@@ -296,6 +245,15 @@
     $b0 = $mean_y - $b1 * $mean_x;
 
     $nilai_dependen_prediksi = $b0 + $b1 * $data_migrasi;
+
+    $check_hasil_rl = "SELECT * FROM hasil_rl WHERE periode='$uji_periode'";
+    $data_rl = mysqli_query($conn, $check_hasil_rl);
+    if (mysqli_num_rows($data_rl) == 0) {
+      $sql = "INSERT INTO hasil_rl(periode,jumlah_migrasi,var_independen,var_dependen,hasil_prediksi) VALUES('$uji_periode','$data_migrasi','$variabel_independen','$variabel_dependen','$nilai_dependen_prediksi')";
+    } else if (mysqli_num_rows($data_rl) > 0) {
+      $sql = "UPDATE hasil_rl SET jumlah_migrasi='$data_migrasi', hasil_prediksi='$nilai_dependen_prediksi' WHERE periode='$uji_periode'";
+    }
+    mysqli_query($conn, $sql);
     ?>
 
     <div class='card shadow mb-4 border-0'>
