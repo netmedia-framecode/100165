@@ -17,6 +17,7 @@ require_once("../templates/views_top.php"); ?>
           <h5 class="card-title">Prediksi</h5>
         </div>
         <form action="" method="post">
+          <input type="hidden" name="id_variabel" value="60">
           <div class="card-body">
             <div class="form-group">
               <label for="id_periode">Periode</label>
@@ -28,16 +29,7 @@ require_once("../templates/views_top.php"); ?>
               </select>
             </div>
             <div class="form-group">
-              <label for="id_variabel">Pilih Variabel</label>
-              <select name="id_variabel" class="form-control" id="id_variabel" required>
-                <option value="" selected>Pilih Periode</option>
-                <?php foreach ($views_variabel as $data_select_variabel) { ?>
-                  <option value="<?= $data_select_variabel['id_variabel'] ?>"><?= $data_select_variabel['nama_variabel'] ?></option>
-                <?php } ?>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="jumlah">Jumlah Variabel</label>
+              <label for="jumlah">Data Migrasi</label>
               <input type="number" name="jumlah" class="form-control" id="jumlah" min="1" required>
             </div>
           </div>

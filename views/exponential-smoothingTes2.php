@@ -216,7 +216,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
         <h5 class="card-title">Hasil Prediksi</h5>
       </div>
       <div class="card-body">
-        <p>Prediksi Penduduk Pada Tahun <?= $uji_periode ?> adalah: <strong><?= round($F_prediksi) ?></strong></p>
+        <p>Jumlah penduduk berdasarkan periode <?= $uji_periode ?> adalah: <strong><?= round($F_prediksi) ?></strong></p>
       </div>
     </div>
     <?php
@@ -464,7 +464,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
         <h5 class="card-title">Hasil Prediksi</h5>
       </div>
       <div class="card-body">
-        <p>Prediksi Migrasi Penduduk Pada Tahun <?= $uji_periode ?> adalah: <strong><?= round($F_prediksi) ?></strong></p>
+        <p>Jumlah migrasi berdasarkan periode <?= $uji_periode ?> adalah: <strong><?= round($F_prediksi) ?></strong></p>
       </div>
     </div>
     <?php
@@ -511,6 +511,9 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
 <div class="row">
   <div class="col-lg-6">
     <div class="card shadow mb-3">
+      <div class="card-header shadow">
+        <h5 class="card-title">Grafik Prediksi - Jumlah Penduduk</h5>
+      </div>
       <div class="card-body">
         <canvas id="pendudukChart"></canvas>
       </div>
@@ -518,6 +521,9 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
   </div>
   <div class="col-lg-6">
     <div class="card shadow mb-3">
+      <div class="card-header shadow">
+        <h5 class="card-title">Grafik Prediksi - Jumlah Migrasi</h5>
+      </div>
       <div class="card-body">
         <canvas id="migrasiChart"></canvas>
       </div>
@@ -530,14 +536,13 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
 if (isset($views_dependen, $new_data, $uji_periode)) {
   // Data untuk grafik jumlah penduduk dan migrasi
   $pendudukData = [];
-  $actual_values = [];
-
+  $migrasiData = [];
   $labels = [];
 
   // Mengisi data aktual untuk grafik
   foreach ($views_dependen as $data) {
     $pendudukData[] = $data['jumlah'];
-    $actual_values[] = $data['jumlah'];
+    $migrasiData[] = $data['jumlah']; // Jika data migrasi sama dengan data penduduk dalam contoh ini
     $labels[] = $data['periode'];
   }
 
@@ -545,18 +550,16 @@ if (isset($views_dependen, $new_data, $uji_periode)) {
   for ($year = $new_data; $year <= $uji_periode; $year++) {
     $predictedValue = round($alpha * end($actual_values) + (1 - $alpha) * end($forecast_values));
     $pendudukData[] =  $forecast;
-
+    $migrasiData[] = $predictedValue;
     $labels[] = $year;
-
+    $actual_values[] = end($actual_values); // Tambahkan data aktual untuk prediksi
     $forecast_values[] = $predictedValue; // Tambahkan data prediksi
   }
 
   // Membuat grafik jumlah penduduk dan jumlah migrasi
   echo "<script>
- 
+    var migrasiData = " . json_encode($migrasiData) . ";
     var pendudukData = " . json_encode($pendudukData) . ";
-    var actualData = " . json_encode($actual_values) . ";
-    var forecastData = " . json_encode($forecast_values) . ";
     var labels = " . json_encode($labels) . ";
 
     var ctxMigrasi = document.getElementById('migrasiChart').getContext('2d');
@@ -565,18 +568,10 @@ if (isset($views_dependen, $new_data, $uji_periode)) {
       data: {
         labels: labels,
         datasets: [{
-          label: 'Nilai Akutal',
-          data: actualData,
+          label: 'Jumlah Migrasi',
+          data: migrasiData,
           borderColor: 'rgba(255, 99, 132, 1)',
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderWidth: 1
-        },
-        
-        {
-          label: 'Nilai Prediksi',
-          data: forecastData,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
           borderWidth: 1
         }]
       },
@@ -592,9 +587,7 @@ if (isset($views_dependen, $new_data, $uji_periode)) {
     
   </script>";
 }
-?>
 
-<?php
 $uji_periode = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['uji_periode'];
 $nilai_alpha = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['nilai_alpha'];
 $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['variabel_dependen'];
@@ -697,10 +690,9 @@ for ($year = $new_data; $year <= $uji_periode; $year++) {
   mysqli_query($conn, $sql);
 }
 
-$s = $new_data - 1;
-$m = $uji_periode - $s;
 
 ?>
+
 <script>
   var ctxPenduduk = document.getElementById('pendudukChart').getContext('2d');
   var pendudukChart = new Chart(ctxPenduduk, {
@@ -708,36 +700,11 @@ $m = $uji_periode - $s;
     data: {
       labels: <?= json_encode($labels) ?>,
       datasets: [{
-          label: 'Jumlah Penduduk',
-          data: <?= json_encode($pendudukData) ?>,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        },
-        {
-          label: 'Nilai Aktual',
-
-          data: <?= json_encode(array_slice($actual_values, $m, count($pendudukData))) ?>, // Memotong array nilai aktual
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
-          borderDash: [5, 5] // Memberikan garis putus-putus untuk nilai aktual
-        },
-        {
-          label: 'Hasil Prediksi',
-          data: <?= json_encode($forecast_values) ?>,
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-          borderDash: [5, 5] // Memberikan garis putus-putus untuk hasil prediksi
-        }
-      ]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: false, // Mengubah menjadi false agar sumbu y dimulai dari nilai awal data asli
-          suggestedMin: <?= min($pendudukData) ?>, // Menentukan nilai minimum sumbu y
-          suggestedMax: <?= max($pendudukData) ?> // Menentukan nilai maksimum sumbu y
-        }
-      }
+        label: 'Jumlah Penduduk',
+        data: <?= json_encode($pendudukData) ?>,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
     }
   });
 </script>

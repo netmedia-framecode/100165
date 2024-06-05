@@ -36,7 +36,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
     } else {
       $sum_y = 0;
     } ?>
-    <!-- <div class="card shadow mb-3">
+    <div class="card shadow mb-3">
       <div class="card-body">
         <div class="table-responsive">
           <table class="table table-bordered text-dark" id="">
@@ -65,7 +65,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
         </div>
       </div>
     </div>
--->
+
     <?php
     $select_dependen = "SELECT dataset.*, data_periode.periode, data_variabel.nama_variabel
                               FROM dataset 
@@ -216,7 +216,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
         <h5 class="card-title">Hasil Prediksi</h5>
       </div>
       <div class="card-body">
-        <p>Prediksi Penduduk Pada Tahun <?= $uji_periode ?> adalah: <strong><?= round($F_prediksi) ?></strong></p>
+        <p>Jumlah penduduk berdasarkan periode <?= $uji_periode ?> adalah: <strong><?= $F_prediksi ?></strong></p>
       </div>
     </div>
     <?php
@@ -289,7 +289,6 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
     } else {
       $sum_y = 0;
     } ?>
-    <!--
     <div class="card shadow mb-3">
       <div class="card-body">
         <div class="table-responsive">
@@ -319,7 +318,6 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
         </div>
       </div>
     </div>
-  -->
 
     <?php
     $select_dependen = "SELECT dataset.*, data_periode.periode, data_variabel.nama_variabel
@@ -464,7 +462,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
         <h5 class="card-title">Hasil Prediksi</h5>
       </div>
       <div class="card-body">
-        <p>Prediksi Migrasi Penduduk Pada Tahun <?= $uji_periode ?> adalah: <strong><?= round($F_prediksi) ?></strong></p>
+        <p>Jumlah migrasi berdasarkan periode <?= $uji_periode ?> adalah: <strong><?= $F_prediksi ?></strong></p>
       </div>
     </div>
     <?php
@@ -504,240 +502,34 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
   </div>
 </div>
 
-<!-- Sisipkan Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- Container untuk grafik -->
-<div class="row">
-  <div class="col-lg-6">
-    <div class="card shadow mb-3">
-      <div class="card-body">
-        <canvas id="pendudukChart"></canvas>
-      </div>
-    </div>
+<div class="card shadow mb-4">
+  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <h6 class="m-0 font-weight-bold text-primary">Grafik Prediksi</h6>
   </div>
-  <div class="col-lg-6">
-    <div class="card shadow mb-3">
-      <div class="card-body">
-        <canvas id="migrasiChart"></canvas>
-      </div>
+  <div class="card-body">
+    <div class="chart-area">
+      <canvas id="myAreaChart"></canvas>
+      <?php
+      $sql = "SELECT 'Jumlah Penduduk' as category, periode, MAX(hasil_prediksi) as hasil_prediksi FROM hasil_es WHERE var_dependen='jumlah_penduduk' GROUP BY category, periode
+              UNION
+              SELECT 'Jumlah Migrasi' as category, periode, MAX(hasil_prediksi) as hasil_prediksi FROM hasil_es WHERE var_dependen='jumlah_migrasi' GROUP BY category, periode;
+              ";
+      $result = $conn->query($sql);
+      $dataGrafik = [];
+      if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+          $dataGrafik[] = [
+            'category' => $row['category'],
+            'hasil_prediksi' => $row['hasil_prediksi'],
+            'periode' => $row['periode'],
+          ];
+        }
+      }
+      ?>
+
+      <script>
+        var dataGrafik = <?php echo json_encode($dataGrafik); ?>;
+      </script>
     </div>
   </div>
 </div>
-
-<?php
-// Pastikan variabel-variabel telah diinisialisasi
-if (isset($views_dependen, $new_data, $uji_periode)) {
-  // Data untuk grafik jumlah penduduk dan migrasi
-  $pendudukData = [];
-  $actual_values = [];
-
-  $labels = [];
-
-  // Mengisi data aktual untuk grafik
-  foreach ($views_dependen as $data) {
-    $pendudukData[] = $data['jumlah'];
-    $actual_values[] = $data['jumlah'];
-    $labels[] = $data['periode'];
-  }
-
-  // Mengisi data prediksi untuk grafik
-  for ($year = $new_data; $year <= $uji_periode; $year++) {
-    $predictedValue = round($alpha * end($actual_values) + (1 - $alpha) * end($forecast_values));
-    $pendudukData[] =  $forecast;
-
-    $labels[] = $year;
-
-    $forecast_values[] = $predictedValue; // Tambahkan data prediksi
-  }
-
-  // Membuat grafik jumlah penduduk dan jumlah migrasi
-  echo "<script>
- 
-    var pendudukData = " . json_encode($pendudukData) . ";
-    var actualData = " . json_encode($actual_values) . ";
-    var forecastData = " . json_encode($forecast_values) . ";
-    var labels = " . json_encode($labels) . ";
-
-    var ctxMigrasi = document.getElementById('migrasiChart').getContext('2d');
-    var migrasiChart = new Chart(ctxMigrasi, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Nilai Akutal',
-          data: actualData,
-          borderColor: 'rgba(255, 99, 132, 1)',
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderWidth: 1
-        },
-        
-        {
-          label: 'Nilai Prediksi',
-          data: forecastData,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-
-    
-  </script>";
-}
-?>
-
-<?php
-$uji_periode = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['uji_periode'];
-$nilai_alpha = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['nilai_alpha'];
-$variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['variabel_dependen'];
-
-$jumlah_data_dependen = 0;
-foreach ($views_variabel as $data_select_variabel) {
-  if ($data_select_variabel['id_variabel'] == $variabel_dependen_id) {
-    $variabel_dependen = $data_select_variabel['nama_variabel'];
-    foreach ($views_dataset as $data) {
-      if ($data['nama_variabel'] == $variabel_dependen) {
-        $jumlah_data_dependen += $data['jumlah'];
-      }
-    }
-    break;
-  }
-}
-
-$uniques_dependen = [];
-foreach ($views_dataset as $data) {
-  if ($data['nama_variabel'] == $variabel_dependen) {
-    if (!in_array($data['periode'], $uniques_dependen)) {
-      $uniques_dependen[] = $data['periode'];
-    }
-  }
-}
-
-$banyaknya_data_dependen = count($uniques_dependen);
-$sum_y = ($banyaknya_data_dependen != 0) ? $jumlah_data_dependen / $banyaknya_data_dependen : 0;
-
-$select_dependen = "SELECT dataset.*, data_periode.periode, data_variabel.nama_variabel
-                    FROM dataset 
-                    JOIN data_periode ON dataset.id_periode = data_periode.id_periode 
-                    JOIN data_variabel ON dataset.id_variabel = data_variabel.id_variabel 
-                    WHERE data_variabel.nama_variabel = '$variabel_dependen' 
-                    ORDER BY dataset.id_periode";
-$views_dependen = mysqli_query($conn, $select_dependen);
-
-$actual_values = array();
-$forecast_values = array();
-$alpha = $nilai_alpha;
-$prev_forecast = 0;
-$first_forecast_done = false;
-$total_mad = 0;
-$total_mse = 0;
-$total_mape = 0;
-
-$pendudukData = [];
-$labels = [];
-
-foreach ($views_dependen as $key => $data) {
-  if ($data['nama_variabel'] == $variabel_dependen) {
-    if (!$first_forecast_done) {
-      $prev_forecast = $data['jumlah'];
-      $first_forecast_done = true;
-      $pendudukData[] = $data['jumlah'];
-      $actual_values[] = $data['jumlah'];
-      $forecast_values[] = $prev_forecast;
-    } else {
-      $forecast = $alpha * $data['jumlah'] + (1 - $alpha) * $prev_forecast;
-      $prev_forecast = $forecast;
-      $mad = abs($data['jumlah'] - $forecast);
-      $mse = pow($data['jumlah'] - $forecast, 2);
-      $mape = abs(($data['jumlah'] - $forecast) / $data['jumlah']) * 100;
-      $total_mad += $mad;
-      $total_mse += $mse;
-      $total_mape += $mape;
-      $pendudukData[] = $forecast;
-      $actual_values[] = $data['jumlah'];
-      $forecast_values[] = $forecast;
-    }
-    $labels[] = $data['periode'];
-  }
-}
-
-$last_data = end($uniques_dependen);
-$new_data = $last_data + 1;
-$hasil_prediksi = 0;
-for ($year = $new_data; $year <= $uji_periode; $year++) {
-  $forecast = $alpha * end($actual_values) + (1 - $alpha) * end($forecast_values);
-  $prev_forecast = $forecast;
-  $mad = abs(end($actual_values) - $forecast);
-  $mse = pow(end($actual_values) - $forecast, 2);
-  $mape = abs((end($actual_values) - $forecast) / end($actual_values)) * 100;
-  $total_mad += $mad;
-  $total_mse += $mse;
-  $total_mape += $mape;
-  $pendudukData[] = $forecast;
-  $actual_values[] = end($actual_values);
-  $forecast_values[] = $forecast;
-  $labels[] = $year;
-  $hasil_prediksi = round($forecast);
-
-  $check_hasil_es = "SELECT * FROM hasil_es WHERE periode='$year' AND var_dependen='$variabel_dependen'";
-  $data_es = mysqli_query($conn, $check_hasil_es);
-  if (mysqli_num_rows($data_es) == 0) {
-    $sql = "INSERT INTO hasil_es(periode,nilai_alpha,var_dependen,hasil_prediksi) VALUES('$year','$nilai_alpha','$variabel_dependen','$hasil_prediksi')";
-  } else if (mysqli_num_rows($data_es) > 0) {
-    $sql = "UPDATE hasil_es SET nilai_alpha='$nilai_alpha', hasil_prediksi='$hasil_prediksi' WHERE periode='$year' AND var_dependen='$variabel_dependen'";
-  }
-  mysqli_query($conn, $sql);
-}
-
-$s = $new_data - 1;
-$m = $uji_periode - $s;
-
-?>
-<script>
-  var ctxPenduduk = document.getElementById('pendudukChart').getContext('2d');
-  var pendudukChart = new Chart(ctxPenduduk, {
-    type: 'line',
-    data: {
-      labels: <?= json_encode($labels) ?>,
-      datasets: [{
-          label: 'Jumlah Penduduk',
-          data: <?= json_encode($pendudukData) ?>,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        },
-        {
-          label: 'Nilai Aktual',
-
-          data: <?= json_encode(array_slice($actual_values, $m, count($pendudukData))) ?>, // Memotong array nilai aktual
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
-          borderDash: [5, 5] // Memberikan garis putus-putus untuk nilai aktual
-        },
-        {
-          label: 'Hasil Prediksi',
-          data: <?= json_encode($forecast_values) ?>,
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-          borderDash: [5, 5] // Memberikan garis putus-putus untuk hasil prediksi
-        }
-      ]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: false, // Mengubah menjadi false agar sumbu y dimulai dari nilai awal data asli
-          suggestedMin: <?= min($pendudukData) ?>, // Menentukan nilai minimum sumbu y
-          suggestedMax: <?= max($pendudukData) ?> // Menentukan nilai maksimum sumbu y
-        }
-      }
-    }
-  });
-</script>

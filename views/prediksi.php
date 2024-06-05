@@ -39,10 +39,10 @@ require_once("../templates/views_top.php"); ?>
                 <option value="2">Single Exponential Smoothing</option>
               </select>
             </div>
-            <div class="form-group" id="migrasi-container">
+            <!-- <div class="form-group" id="migrasi-container">
               <label for="migrasi">Data Migrasi</label>
               <input type="number" name="migrasi" value="1" class="form-control" id="migrasi" min="1" required>
-            </div>
+            </div> -->
             <div class="form-group for-ses" id="alpha-container">
               <label for="nilai_alpha">Nilai Alpha</label>
               <input type="range" name="nilai_alpha" class="form-control" id="nilai_alpha" value="0.1" min="0.1" max="1" step="0.1" required>
@@ -50,15 +50,15 @@ require_once("../templates/views_top.php"); ?>
               <script>
                 $(document).ready(function() {
                   // Sembunyikan elemen nilai_alpha saat halaman dimuat
-                  $("#migrasi-container").hide();
+                  // $("#migrasi-container").hide();
                   $("#alpha-container").hide();
 
                   $("#metode").on("change", function() {
-                    if ($(this).val() === "1") {
-                      $("#migrasi-container").show();
-                    } else {
-                      $("#migrasi-container").hide();
-                    }
+                    // if ($(this).val() === "1") {
+                    //   $("#migrasi-container").show();
+                    // } else {
+                    //   $("#migrasi-container").hide();
+                    // }
 
                     if ($(this).val() === "2") {
                       $("#alpha-container").show();
