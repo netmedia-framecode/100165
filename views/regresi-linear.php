@@ -263,226 +263,207 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
 <!--grafik-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linear Regression Prediction</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-
-<body>
-  <!-- Charts -->
-  <div class="row">
-    <div class="col-lg-6">
-      <div class="card shadow mb-3">
-        <div class="card-header shadow">
-          <h5 class="card-title">Grafik Prediksi - Jumlah Penduduk</h5>
-        </div>
-        <div class="card-body">
-          <canvas id="chartPopulation"></canvas>
-        </div>
+<!-- Charts -->
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card shadow mb-3">
+      <div class="card-header shadow">
+        <h5 class="card-title">Grafik Prediksi - Jumlah Penduduk</h5>
       </div>
-    </div>
-
-    <div class="col-lg-6">
-      <div class="card shadow mb-3">
-        <div class="card-header shadow">
-          <h5 class="card-title">Grafik Prediksi - Jumlah Migrasi</h5>
-        </div>
-        <div class="card-body">
-          <canvas id="chartMigration"></canvas>
-        </div>
+      <div class="card-body">
+        <canvas id="chartPopulation"></canvas>
       </div>
     </div>
   </div>
 
-  <?php
-  // Your PHP code for data preparation and linear regression calculation
-  // ...
+  <div class="col-lg-6">
+    <div class="card shadow mb-3">
+      <div class="card-header shadow">
+        <h5 class="card-title">Grafik Prediksi - Jumlah Migrasi</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="chartMigration"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
 
-  // Prepare data for population chart
-  $labels_population = $periode_penduduk;
-  $data_population = $nilai_penduduk;
-  $last_data_population = end($periode_penduduk);
+<?php
+// Your PHP code for data preparation and linear regression calculation
+// ...
 
-  $prev_forecast_population = end($nilai_penduduk);
+// Prepare data for population chart
+$labels_population = $periode_penduduk;
+$data_population = $nilai_penduduk;
+$last_data_population = end($periode_penduduk);
 
-  for ($year = $last_data_population + 1; $year <= $uji_periode; $year++) {
-    $labels_population[] = $year;
-    $forecast_population = $b0_penduduk + $b1_penduduk * $prev_forecast_population;
-    $data_population[] = $forecast_population;
-    $prev_forecast_population = $forecast_population;
-  }
+$prev_forecast_population = end($nilai_penduduk);
+
+for ($year = $last_data_population + 1; $year <= $uji_periode; $year++) {
+  $labels_population[] = $year;
+  $forecast_population = $b0_penduduk + $b1_penduduk * $prev_forecast_population;
+  $data_population[] = $forecast_population;
+  $prev_forecast_population = $forecast_population;
+}
 
 
-  // Add actual population values to the dataset
-  $actual_population = $nilai_penduduk;
+// Add actual population values to the dataset
+$actual_population = $nilai_penduduk;
 
-  for ($year = $last_data_population + 1; $year <= $uji_periode; $year++) {
-    $actual_population[] = $actual_population_periode[$year]; // Assuming $actual_population_periode is an array containing actual population values for each year
-  }
-  // var_dump($actual_population);
-  // Prepare data for migration chart
-  $labels_migration = $periode_migrasi;
-  $data_migration = $nilai_migrasi;
-  $last_data_migration = end($periode_migrasi);
-  $prev_forecast_migration = end($nilai_migrasi);
+for ($year = $last_data_population + 1; $year <= $uji_periode; $year++) {
+  $actual_population[] = $actual_population_periode[$year]; // Assuming $actual_population_periode is an array containing actual population values for each year
+}
+// var_dump($actual_population);
+// Prepare data for migration chart
+$labels_migration = $periode_migrasi;
+$data_migration = $nilai_migrasi;
+$last_data_migration = end($periode_migrasi);
+$prev_forecast_migration = end($nilai_migrasi);
 
-  for ($year = $last_data_migration + 1; $year <= $uji_periode; $year++) {
-    $labels_migration[] = $year;
-    $forecast_migration = $b0_migrasi + $b1_migrasi * $prev_forecast_migration;
-    $data_migration[] = $forecast_migration;
-    $prev_forecast_migration = $forecast_migration;
-  }
+for ($year = $last_data_migration + 1; $year <= $uji_periode; $year++) {
+  $labels_migration[] = $year;
+  $forecast_migration = $b0_migrasi + $b1_migrasi * $prev_forecast_migration;
+  $data_migration[] = $forecast_migration;
+  $prev_forecast_migration = $forecast_migration;
+}
 
-  // Add actual migration values to the dataset
-  $actual_migration = $nilai_migrasi;
-  for ($year = $last_data_migration + 1; $year <= $uji_periode; $year++) {
-    $actual_migration[] = $actual_migration_periode[$year]; // Assuming $actual_migration_periode is an array containing actual migration values for each year
-  }
-  ?>
+// Add actual migration values to the dataset
+$actual_migration = $nilai_migrasi;
+for ($year = $last_data_migration + 1; $year <= $uji_periode; $year++) {
+  $actual_migration[] = $actual_migration_periode[$year]; // Assuming $actual_migration_periode is an array containing actual migration values for each year
+}
+?>
 
-  <script>
-    var ctxPopulation = document.getElementById('chartPopulation').getContext('2d');
-    var chartPopulation = new Chart(ctxPopulation, {
-      type: 'line',
-      data: {
-        labels: <?= json_encode($labels_population) ?>,
-        datasets: [{
-            label: 'Jumlah Penduduk Prediksi',
-            data: <?= json_encode($data_population) ?>,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1,
-            fill: false
-          },
-          {
-            label: 'Jumlah Penduduk Aktual',
-            data: <?= json_encode($actual_population) ?>,
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1,
-            fill: false
+<script>
+  var ctxPopulation = document.getElementById('chartPopulation').getContext('2d');
+  var chartPopulation = new Chart(ctxPopulation, {
+    type: 'line',
+    data: {
+      labels: <?= json_encode($labels_population) ?>,
+      datasets: [{
+          label: 'Jumlah Penduduk Prediksi',
+          data: <?= json_encode($data_population) ?>,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+          fill: false
+        },
+        {
+          label: 'Jumlah Penduduk Aktual',
+          data: <?= json_encode($actual_population) ?>,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Periode'
           }
-        ]
-      },
-      options: {
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Periode'
-            }
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Jumlah'
-            }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Jumlah'
           }
         }
       }
-    });
+    }
+  });
 
-    var ctxMigration = document.getElementById('chartMigration').getContext('2d');
-    var chartMigration = new Chart(ctxMigration, {
-      type: 'line',
-      data: {
-        labels: <?= json_encode($labels_migration) ?>,
-        datasets: [{
-            label: 'Jumlah Migrasi Prediksi',
-            data: <?= json_encode($data_migration) ?>,
-            borderColor: 'rgba(153, 102, 255, 1)',
-            borderWidth: 1,
-            fill: false
-          },
-          {
-            label: 'Jumlah Migrasi Aktual',
-            data: <?= json_encode($actual_migration) ?>,
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1,
-            fill: false
+  var ctxMigration = document.getElementById('chartMigration').getContext('2d');
+  var chartMigration = new Chart(ctxMigration, {
+    type: 'line',
+    data: {
+      labels: <?= json_encode($labels_migration) ?>,
+      datasets: [{
+          label: 'Jumlah Migrasi Prediksi',
+          data: <?= json_encode($data_migration) ?>,
+          borderColor: 'rgba(153, 102, 255, 1)',
+          borderWidth: 1,
+          fill: false
+        },
+        {
+          label: 'Jumlah Migrasi Aktual',
+          data: <?= json_encode($actual_migration) ?>,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Periode'
           }
-        ]
-      },
-      options: {
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Periode'
-            }
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Jumlah'
-            }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Jumlah'
           }
         }
       }
-    });
+    }
+  });
 
 
 
-    var ctxPopulation = document.getElementById('chartPopulation').getContext('2d');
-    var chartPopulation = new Chart(ctxPopulation, {
-      type: 'line',
-      data: {
-        labels: <?= json_encode($labels_population) ?>,
-        datasets: [{
-            label: 'Jumlah Penduduk Prediksi',
-            data: <?= json_encode($data_population) ?>,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1,
-            fill: false
-          },
-          {
-            label: 'Y_t-1',
-            data: <?= json_encode($yt_minus_1) ?>, // Ini adalah data Y_t-1 yang harus Anda tambahkan
-            borderColor: 'rgba(255, 206, 86, 1)', // Warna garis untuk Y_t-1
-            borderWidth: 1,
-            fill: false
-          },
-          {
-            label: 'Jumlah Penduduk Aktual',
-            data: <?= json_encode($actual_population) ?>,
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1,
-            fill: false
+  var ctxPopulation = document.getElementById('chartPopulation').getContext('2d');
+  var chartPopulation = new Chart(ctxPopulation, {
+    type: 'line',
+    data: {
+      labels: <?= json_encode($labels_population) ?>,
+      datasets: [{
+          label: 'Jumlah Penduduk Prediksi',
+          data: <?= json_encode($data_population) ?>,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+          fill: false
+        },
+        {
+          label: 'Y_t-1',
+          data: <?= json_encode($yt_minus_1) ?>, // Ini adalah data Y_t-1 yang harus Anda tambahkan
+          borderColor: 'rgba(255, 206, 86, 1)', // Warna garis untuk Y_t-1
+          borderWidth: 1,
+          fill: false
+        },
+        {
+          label: 'Jumlah Penduduk Aktual',
+          data: <?= json_encode($actual_population) ?>,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Periode'
           }
-        ]
-      },
-      options: {
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Periode'
-            }
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Jumlah'
-            }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Jumlah'
           }
         }
       }
-    });
-  </script>
+    }
+  });
+</script>
 </body>
 
 </html>
