@@ -1,3 +1,4 @@
+<?php error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING); ?>
 <div class="row">
   <div class="col-lg-6">
     <div class="card shadow mb-3">

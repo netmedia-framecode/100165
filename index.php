@@ -17,7 +17,7 @@ require_once("templates/top.php");
                 </h1>
                 <p class="text-light">System ini bertujuan untuk pengimplementasian metode regresi linier dan metode single exponential smoothing untuk memprediksi jumlah penduduk di kecamatan Tasifeto Barat.</p>
                 <div class="btn-box">
-                  <a href="prediksi" class="btn1">
+                  <a href="prediksi" class="btn1 bg-primary">
                     Prediksi
                   </a>
                 </div>
@@ -53,13 +53,13 @@ require_once("templates/top.php");
               echo substr($text, 0, $num_char);
             }
           } ?>
-          <a href="tentang">
+          <a href="tentang" class="btn1 bg-primary">
             Baca Lebih
           </a>
         </div>
       </div>
       <div class="col-md-6 ">
-        <div class="img-box">
+        <div class="img-box bg-primary">
           <img src="assets/img/IMG-20240314-WA0008.jpg" style="height: 400px;width: 100%; object-fit: cover;" alt="">
         </div>
       </div>
@@ -77,7 +77,7 @@ require_once("templates/top.php");
     </div>
     <div class="why_us_container">
       <div class="box">
-        <div class="img-box">
+        <div class="img-box bg-primary">
           <img src="assets/img/grafik.png" alt="">
         </div>
         <div class="detail-box">
@@ -90,7 +90,7 @@ require_once("templates/top.php");
         </div>
       </div>
       <div class="box">
-        <div class="img-box">
+        <div class="img-box bg-primary">
           <img src="assets/img/grafik.png" alt="">
         </div>
         <div class="detail-box">
@@ -104,7 +104,7 @@ require_once("templates/top.php");
       </div>
     </div>
     <div class="btn-box">
-      <a href="prediksi">
+      <a href="prediksi" class="btn1 bg-primary">
         Lihat Prediksi
       </a>
     </div>

@@ -26,9 +26,6 @@
               <a class="nav-link" href="laporan">Laporan</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="kontak">Kontak</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="auth/"><i class="bi bi-box-arrow-in-right"></i> Login</a>
             </li>
           </ul>

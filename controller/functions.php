@@ -59,20 +59,6 @@ function compressImage($source, $destination, $quality)
   return $destination;
 }
 
-function kontak($conn, $data, $action, $pesan)
-{
-  if ($action == "insert") {
-    $sql = "INSERT INTO kontak(nama,email,phone,pesan) VALUES('$data[nama]','$data[email]','$data[phone]','$pesan')";
-  }
-
-  if ($action == "delete") {
-    $sql = "DELETE FROM kontak WHERE id_kontak='$data[id_kontak]'";
-  }
-
-  mysqli_query($conn, $sql);
-  return mysqli_affected_rows($conn);
-}
-
 if (!isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
   function register($conn, $data, $action)
   {

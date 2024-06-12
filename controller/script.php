@@ -22,21 +22,6 @@ $views_auth = mysqli_query($conn, $select_auth);
 $tentang = "SELECT * FROM tentang";
 $views_tentang = mysqli_query($conn, $tentang);
 
-$kontak = "SELECT * FROM kontak";
-$views_kontak = mysqli_query($conn, $kontak);
-if (isset($_POST['add_kontak'])) {
-  $validated_post = array_map(function ($value) use ($conn) {
-    return valid($conn, $value);
-  }, $_POST);
-  if (kontak($conn, $validated_post, $action = 'insert', $pesan = $_POST['pesan']) > 0) {
-    $message = "Pesan anda berhasil dikirim.";
-    $message_type = "success";
-    alert($message, $message_type);
-    header("Location: kontak");
-    exit();
-  }
-}
-
 $periode = "SELECT * FROM data_periode ORDER BY periode DESC";
 $views_periode = mysqli_query($conn, $periode);
 
@@ -575,19 +560,6 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
     }
   }
 
-  if (isset($_POST["delete_kontak"])) {
-    $validated_post = array_map(function ($value) use ($conn) {
-      return valid($conn, $value);
-    }, $_POST);
-    if (kontak($conn, $validated_post, $action = 'delete', $_POST['pesan']) > 0) {
-      $message = "Pesan berhasil dihapus.";
-      $message_type = "success";
-      alert($message, $message_type);
-      header("Location: kontak");
-      exit();
-    }
-  }
-
   $data_uji = "SELECT * FROM data_uji ORDER BY periode ASC";
   $views_data_uji = mysqli_query($conn, $data_uji);
   if (isset($_POST["add_data_uji"])) {
@@ -630,7 +602,6 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
   if (isset($_POST["prediksi"])) {
     $uji_periode = valid($conn, $_POST['uji_periode']);
     $metode = valid($conn, $_POST['metode']);
-    $migrasi = valid($conn, $_POST['migrasi']);
     $nilai_alpha = valid($conn, $_POST['nilai_alpha']);
     $variabel_dependen = valid($conn, $_POST['variabel_dependen']);
     $variabel_independen = valid($conn, $_POST['variabel_independen']);
@@ -646,7 +617,6 @@ if (isset($_SESSION["project_prediksi_pertumbuhan_penduduk"]["users"])) {
       'uji_periode' => $uji_periode,
       'metode' => $metode,
       'nilai_alpha' => $nilai_alpha,
-      'data_migrasi' => $migrasi,
       'variabel_dependen' => $variabel_dependen,
       'variabel_independen' => $variabel_independen
     ];
