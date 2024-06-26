@@ -126,7 +126,17 @@
             </tfoot>
             <tbody>
               <?php
+              $total_x_data = 0;
+              $total_y_data = 0;
+              $total_x2_data = 0;
+              $total_yty_data = 0;
+              $total_yt1y_data = 0;
+              $x_data = 1;
+              $xy = 0;
               for ($i = 1; $i < count($nilai_penduduk); $i++) {
+                $x2_data = $x_data ** 2;
+                $y2_data = $nilai_penduduk[$i - 1] ** 2;
+                $xy = $x_data * $nilai_penduduk[$i - 1];
                 echo "<tr>";
                 echo "<td>" . $periode_penduduk[$i] . "</td>";
                 echo "<td>" . $nilai_penduduk[$i] . "</td>";
@@ -135,6 +145,90 @@
                 $diff_y_t_1 = $nilai_penduduk[$i - 1] - $mean_y_penduduk;
                 echo "<td>" . $diff_y_t . "</td>";
                 echo "<td>" . $diff_y_t_1 . "</td>";
+                echo "</tr>";
+                $total_x_data += $x_data;
+                $total_y_data += $nilai_penduduk[$i - 1];
+                $total_x2_data += $x2_data;
+                $total_y2_data += $y2_data;
+                $total_xy += $xy;
+                $x_data++;
+              }
+
+              $last_data = end($periode_penduduk);
+              $prev_forecast = end($nilai_penduduk);
+
+              for ($year = $last_data + 1; $year <= $uji_periode; $year++) {
+                $forecast = $b0_penduduk + $b1_penduduk * $prev_forecast;
+                $x2_data = $x_data ** 2;
+                echo "<tr>";
+                echo "<td>" . $year . "</td>";
+                echo "<td>" . $forecast . "</td>";
+                echo "<td>" . $prev_forecast . "</td>";
+                $diff_y_t = $forecast - $mean_y_penduduk;
+                $diff_y_t_1 = $prev_forecast - $mean_y_penduduk;
+                echo "<td>" . $diff_y_t . "</td>";
+                echo "<td>" . $diff_y_t_1 . "</td>";
+                echo "</tr>";
+                $prev_forecast = $forecast;
+                $total_x_data += $x_data;
+                $total_y_data += $nilai_penduduk[$i - 1];
+                $total_x2_data += $x2_data;
+                $total_y2_data += $y2_data;
+                $total_xy += $xy;
+                $x_data++;
+              }
+
+              $n_penduduk = $x_data - 1;
+              $a_penduduk = ($total_y_data * $total_x2_data - $total_x_data * $total_xy) / (($n_penduduk * $total_x2_data) - ($total_x_data ** 2));
+              $b_penduduk = ($n_penduduk * $total_xy - $total_x_data * $total_y_data) / ($n_penduduk * $total_x2_data - $total_x_data ** 2);
+              ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow mb-3">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered text-dark">
+            <thead>
+              <tr>
+                <th>Periode</th>
+                <th>Jumlah Penduduk</th>
+                <th>Prediksi</th>
+                <th>MAD</th>
+                <th>MSE</th>
+                <th>MAPE</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th>Periode</th>
+                <th>Jumlah Penduduk</th>
+                <th>Prediksi</th>
+                <th>MAD</th>
+                <th>MSE</th>
+                <th>MAPE</th>
+              </tr>
+            </tfoot>
+            <tbody>
+              <?php
+              for ($i = 1; $i < count($nilai_penduduk); $i++) {
+                $prediksi_penduduk = ($a_penduduk + $b_penduduk) * $i;
+                echo "<tr>";
+                echo "<td>" . $periode_penduduk[$i] . "</td>";
+                echo "<td>" . $nilai_penduduk[$i] . "</td>";
+                echo "<td>" . $prediksi_penduduk . "</td>";
+                $mad = abs($nilai_penduduk[$i] - $prediksi_penduduk);
+                $mse = pow($nilai_penduduk[$i] - $prediksi_penduduk, 2);
+                $mape = abs(($nilai_penduduk[$i] - $prediksi_penduduk) / $nilai_penduduk[$i]) * 100;
+                $total_mad += $mad;
+                $total_mse += $mse;
+                $total_mape += $mape;
+                echo "<td>" . $total_mad . "</td>";
+                echo "<td>" . $total_mse . "</td>";
+                echo "<td>" . $total_mape . "</td>";
                 echo "</tr>";
               }
 
@@ -145,12 +239,17 @@
                 $forecast = $b0_penduduk + $b1_penduduk * $prev_forecast;
                 echo "<tr>";
                 echo "<td>" . $year . "</td>";
+                echo "<td>" . round($prev_forecast) . "</td>";
                 echo "<td>" . $forecast . "</td>";
-                echo "<td>" . $prev_forecast . "</td>";
-                $diff_y_t = $forecast - $mean_y_penduduk;
-                $diff_y_t_1 = $prev_forecast - $mean_y_penduduk;
-                echo "<td>" . $diff_y_t . "</td>";
-                echo "<td>" . $diff_y_t_1 . "</td>";
+                $mad = abs(round($prev_forecast) - $forecast);
+                $mse = pow(round($prev_forecast) - $forecast, 2);
+                $mape = abs((round($prev_forecast) - $forecast) / round($prev_forecast)) * 100;
+                $total_mad += $mad;
+                $total_mse += $mse;
+                $total_mape += $mape;
+                echo "<td>" . $total_mad . "</td>";
+                echo "<td>" . $total_mse . "</td>";
+                echo "<td>" . $total_mape . "</td>";
                 echo "</tr>";
                 $prev_forecast = $forecast;
               }
@@ -177,12 +276,88 @@
         <p>Prediksi Penduduk pada tahun <?= $uji_periode ?> adalah <strong><?= round($forecast) ?></strong></p>
       </div>
     </div>
+    <?php
+    // Ambil data aktual dari database untuk tahun yang diprediksi
+    $sql_actual = "SELECT dataset.*, data_periode.periode, data_variabel.nama_variabel 
+                      FROM dataset 
+                      JOIN data_periode ON dataset.id_periode = data_periode.id_periode 
+                      JOIN data_variabel ON dataset.id_variabel = data_variabel.id_variabel 
+                      WHERE data_periode.id_periode = '$data[id_periode]' AND data_variabel.id_variabel = '$data[id_variabel]'";
+    $result_actual = mysqli_query($conn, $sql_actual);
+
+    // Periksa apakah query berjalan dengan benar
+    if (!$result_actual) {
+      die("Query error: " . mysqli_error($conn));
+    }
+
+    // Ambil nilai aktual dari hasil query
+    $row_actual = mysqli_fetch_assoc($result_actual);
+    $nilai_dependen_actual = $row_actual['jumlah'];
+
+
+    // Hitung error menggunakan metode MAE
+    $error = abs($nilai_dependen_actual - $forecast);
+
+    // Hitung error dalam persen
+    $error_percentage = ($error / $nilai_dependen_actual) * 100;
+
+    // Menampilkan hasil error
+    echo "<div class='card shadow mb-4 border-0'>";
+    echo "<div class='card-body'>";
+    echo "<h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>";
+    echo "<p>Error = " . $error . "</p>";
+    echo "<p>Error dalam persen = " . $error_percentage . "%</p>";
+    echo "</div>";
+    echo "</div>"; ?>
   </div>
 
   <div class="col-lg-6">
     <?php
+    // Ambil data variabel dependen dari session
+    $uji_periode = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['uji_periode'];
+
+    $periode_penduduk = array();
+    $nilai_penduduk = array();
+    $periode_migrasi = array();
+    $nilai_migrasi = array();
+
+    // Mengambil data dari dataset untuk jumlah penduduk
+    foreach ($views_dataset as $data) {
+      if ($data['id_variabel'] == 59) {
+        $periode_penduduk[] = $data['periode'];
+        $nilai_penduduk[] = $data['jumlah'];
+      } elseif ($data['id_variabel'] == 60) { // Mengambil data dari dataset untuk jumlah migrasi
+        $periode_migrasi[] = $data['periode'];
+        $nilai_migrasi[] = $data['jumlah'];
+      }
+    }
+
+    // Fungsi untuk menghitung regresi linier
+    function hitungRegresiMigrasi($nilai_dependen)
+    {
+      $mean_y = array_sum($nilai_dependen) / count($nilai_dependen);
+
+      $denominator = 0;
+      $numerator = 0;
+
+      for ($i = 1; $i < count($nilai_dependen); $i++) {
+        $diff_y_t_1 = $nilai_dependen[$i - 1] - $mean_y;
+        $diff_y_t = $nilai_dependen[$i] - $mean_y;
+        $denominator += pow($diff_y_t_1, 2);
+        $numerator += $diff_y_t_1 * $diff_y_t;
+      }
+
+      $b1 = $numerator / $denominator;
+      $b0 = $mean_y - $b1 * $mean_y;
+
+      return array($b0, $b1, $mean_y);
+    }
+
+    // Hitung regresi untuk jumlah penduduk
+    list($b0_penduduk, $b1_penduduk, $mean_y_penduduk) = hitungRegresiMigrasi($nilai_penduduk);
+
     // Hitung regresi untuk jumlah migrasi
-    list($b0_migrasi, $b1_migrasi, $mean_y_migrasi) = hitungRegresi($nilai_migrasi);
+    list($b0_migrasi, $b1_migrasi, $mean_y_migrasi) = hitungRegresiMigrasi($nilai_migrasi);
     ?>
 
     <div class="card shadow mb-3">
@@ -209,7 +384,17 @@
             </tfoot>
             <tbody>
               <?php
+              $total_x_data = 0;
+              $total_y_data = 0;
+              $total_x2_data = 0;
+              $total_yty_data = 0;
+              $total_yt1y_data = 0;
+              $x_data = 1;
+              $xy = 0;
               for ($i = 1; $i < count($nilai_migrasi); $i++) {
+                $x2_data = $x_data ** 2;
+                $y2_data = $nilai_migrasi[$i - 1] ** 2;
+                $xy = $x_data * $nilai_migrasi[$i - 1];
                 echo "<tr>";
                 echo "<td>" . $periode_migrasi[$i] . "</td>";
                 echo "<td>" . $nilai_migrasi[$i] . "</td>";
@@ -219,6 +404,12 @@
                 echo "<td>" . $diff_y_t . "</td>";
                 echo "<td>" . $diff_y_t_1 . "</td>";
                 echo "</tr>";
+                $total_x_data += $x_data;
+                $total_y_data += $nilai_migrasi[$i - 1];
+                $total_x2_data += $x2_data;
+                $total_y2_data += $y2_data;
+                $total_xy += $xy;
+                $x_data++;
               }
 
               $last_data = end($periode_migrasi);
@@ -226,6 +417,7 @@
 
               for ($year = $last_data + 1; $year <= $uji_periode; $year++) {
                 $forecast = $b0_migrasi + $b1_migrasi * $prev_forecast;
+                $x2_data = $x_data ** 2;
                 echo "<tr>";
                 echo "<td>" . $year . "</td>";
                 echo "<td>" . $forecast . "</td>";
@@ -236,6 +428,88 @@
                 echo "<td>" . $diff_y_t_1 . "</td>";
                 echo "</tr>";
                 $prev_forecast = $forecast;
+                $total_x_data += $x_data;
+                $total_y_data += $nilai_migrasi[$i - 1];
+                $total_x2_data += $x2_data;
+                $total_y2_data += $y2_data;
+                $total_xy += $xy;
+                $x_data++;
+              }
+
+              $n_migrasi = $x_data - 1;
+              $a_migrasi = ($total_y_data * $total_x2_data - $total_x_data * $total_xy) / (($n_migrasi * $total_x2_data) - ($total_x_data ** 2));
+              $b_migrasi = ($n_migrasi * $total_xy - $total_x_data * $total_y_data) / ($n_migrasi * $total_x2_data - $total_x_data ** 2);
+              ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow mb-3">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered text-dark">
+            <thead>
+              <tr>
+                <th>Periode</th>
+                <th>Jumlah Migrasi</th>
+                <th>Prediksi</th>
+                <th>MAD</th>
+                <th>MSE</th>
+                <th>MAPE</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th>Periode</th>
+                <th>Jumlah Migrasi</th>
+                <th>Prediksi</th>
+                <th>MAD</th>
+                <th>MSE</th>
+                <th>MAPE</th>
+              </tr>
+            </tfoot>
+            <tbody>
+              <?php
+              for ($i = 1; $i < count($nilai_migrasi); $i++) {
+                $prediksi_migrasi = ($a_migrasi + $b_migrasi) * $i;
+                echo "<tr>";
+                echo "<td>" . $periode_migrasi[$i] . "</td>";
+                echo "<td>" . $nilai_migrasi[$i] . "</td>";
+                echo "<td>" . $prediksi_migrasi . "</td>";
+                $mad = abs($nilai_migrasi[$i] - $prediksi_migrasi);
+                $mse = pow($nilai_migrasi[$i] - $prediksi_migrasi, 2);
+                $mape = abs(($nilai_migrasi[$i] - $prediksi_migrasi) / $nilai_migrasi[$i]) * 100;
+                $total_mad += $mad;
+                $total_mse += $mse;
+                $total_mape += $mape;
+                echo "<td>" . $total_mad . "</td>";
+                echo "<td>" . $total_mse . "</td>";
+                echo "<td>" . $total_mape . "</td>";
+                echo "</tr>";
+              }
+
+              $last_data = end($periode_migrasi);
+              $prev_forecast = end($nilai_migrasi);
+
+              for ($year = $last_data + 1; $year <= $uji_periode; $year++) {
+                $forecast_migrasi = $b0_migrasi + $b1_migrasi * $prev_forecast;
+                echo "<tr>";
+                echo "<td>" . $year . "</td>";
+                echo "<td>" . round($prev_forecast) . "</td>";
+                echo "<td>" . $forecast_migrasi . "</td>";
+                $mad = abs(round($prev_forecast) - $forecast_migrasi);
+                $mse = pow(round($prev_forecast) - $forecast_migrasi, 2);
+                $mape = abs((round($prev_forecast) - $forecast_migrasi) / round($prev_forecast)) * 100;
+                $total_mad += $mad;
+                $total_mse += $mse;
+                $total_mape += $mape;
+                echo "<td>" . $total_mad . "</td>";
+                echo "<td>" . $total_mse . "</td>";
+                echo "<td>" . $total_mape . "</td>";
+                echo "</tr>";
+                $prev_forecast = $forecast_migrasi;
               }
               ?>
             </tbody>
@@ -257,9 +531,43 @@
         <h5 class="card-title">Hasil Prediksi - Jumlah Migrasi</h5>
       </div>
       <div class='card-body'>
-        <p>Prediksi Penduduk pada tahun <?= $uji_periode ?> adalah <strong><?= round($forecast) ?></strong></p>
+        <p>Prediksi Migrasi pada tahun <?= $uji_periode ?> adalah <strong><?= round($forecast_migrasi) ?></strong></p>
       </div>
     </div>
+
+    <?php
+    // Ambil data aktual dari database untuk tahun yang diprediksi
+    $sql_actual = "SELECT dataset.*, data_periode.periode, data_variabel.nama_variabel 
+          FROM dataset 
+          JOIN data_periode ON dataset.id_periode = data_periode.id_periode 
+          JOIN data_variabel ON dataset.id_variabel = data_variabel.id_variabel 
+          WHERE data_periode.id_periode = '$data[id_periode]' AND data_variabel.id_variabel = '$data[id_variabel]'";
+    $result_actual = mysqli_query($conn, $sql_actual);
+
+    // Periksa apakah query berjalan dengan benar
+    if (!$result_actual) {
+      die("Query error: " . mysqli_error($conn));
+    }
+
+    // Ambil nilai aktual dari hasil query
+    $row_actual = mysqli_fetch_assoc($result_actual);
+    $nilai_dependen_actual = $row_actual['jumlah'];
+
+    // Hitung error menggunakan metode MAE
+    $error = abs($nilai_dependen_actual - $forecast_migrasi);
+
+    // Hitung error dalam persen
+    $error_percentage = ($error / $nilai_dependen_actual) * 100;
+
+    // Menampilkan hasil error
+    echo "<div class='card shadow mb-4 border-0'>";
+    echo "<div class='card-body'>";
+    echo "<h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>";
+    echo "<p>Error = " . $error . "</p>";
+    echo "<p>Error dalam persen = " . $error_percentage . "%</p>";
+    echo "</div>";
+    echo "</div>";
+    ?>
   </div>
 </div>
 

@@ -485,7 +485,6 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
     $row_actual = mysqli_fetch_assoc($result_actual);
     $nilai_dependen_actual = $row_actual['jumlah'];
 
-
     // Hitung error menggunakan metode MAE
     $error = abs($nilai_dependen_actual - $F_prediksi);
 
