@@ -117,17 +117,6 @@
                 <th>XY</th>
               </tr>
             </thead>
-            <tfoot>
-              <tr>
-                <th>Periode</th>
-                <th>Nilai Dependen</th>
-                <th>X</th>
-                <th>Y</th>
-                <th>X^2</th>
-                <th>Y^2</th>
-                <th>XY</th>
-              </tr>
-            </tfoot>
             <tbody>
               <?php
               $total_x_data_penduduk = 0;
@@ -135,6 +124,7 @@
               $total_x2_data_penduduk = 0;
               $x_data_penduduk = 1;
               $xy_penduduk = 0;
+              $n_penduduk = count($nilai_penduduk);
               for ($i = 0; $i < count($nilai_penduduk); $i++) {
                 $x2_data_penduduk = $x_data_penduduk ** 2;
                 $y2_data_penduduk = $nilai_penduduk[$i] ** 2;
@@ -157,7 +147,7 @@
               }
 
               echo "<tr>";
-              echo "<th colspan='2'>Total Dataset</th>";
+              echo "<th colspan='2'>Total</th>";
               echo "<th>" . $total_x_data_penduduk . "</th>";
               echo "<th>" . $total_y_data_penduduk . "</th>";
               echo "<th>" . $total_x2_data_penduduk . "</th>";
@@ -165,42 +155,6 @@
               echo "<th>" . $total_xy_penduduk . "</th>";
               echo "</tr>";
 
-              $last_data = end($periode_penduduk);
-              $prev_forecast = end($nilai_penduduk);
-
-              for ($year = $last_data + 1; $year <= $uji_periode; $year++) {
-                $forecast = $b0_penduduk + $b1_penduduk * $prev_forecast;
-                $x2_data_penduduk = $x_data_penduduk ** 2;
-                $y2_data_penduduk = round($forecast) ** 2;
-                $xy_penduduk = $x_data_penduduk * round($forecast);
-                echo "<tr>";
-                echo "<td>" . $year . "</td>";
-                echo "<td>" . round($forecast) . "</td>";
-                echo "<td>" . $x_data_penduduk . "</td>";
-                echo "<td>" . round($forecast) . "</td>";
-                echo "<td>" . round($x2_data_penduduk) . "</td>";
-                echo "<td>" . round($y2_data_penduduk) . "</td>";
-                echo "<td>" . round($xy_penduduk) . "</td>";
-                echo "</tr>";
-                $prev_forecast = $forecast;
-                $total_x_data_penduduk += $x_data_penduduk;
-                $total_y_data_penduduk += $forecast;
-                $total_x2_data_penduduk += $x2_data_penduduk;
-                $total_y2_data_penduduk += $y2_data_penduduk;
-                $total_xy_penduduk += $xy_penduduk;
-                $x_data_penduduk++;
-              }
-
-              echo "<tr>";
-              echo "<th colspan='2'>Total Dataset & Prediksi</th>";
-              echo "<th>" . $total_x_data_penduduk . "</th>";
-              echo "<th>" . round($total_y_data_penduduk) . "</th>";
-              echo "<th>" . round($total_x2_data_penduduk) . "</th>";
-              echo "<th>" . round($total_y2_data_penduduk) . "</th>";
-              echo "<th>" . round($total_xy_penduduk) . "</th>";
-              echo "</tr>";
-
-              $n_penduduk = $x_data_penduduk - 1;
               $a_penduduk = (($total_y_data_penduduk * $total_x2_data_penduduk) - ($total_x_data_penduduk * $total_xy_penduduk)) / (($n_penduduk * $total_x2_data_penduduk) - ($total_x_data_penduduk ** 2));
               $b_penduduk = ($n_penduduk * $total_xy_penduduk - $total_x_data_penduduk * $total_y_data_penduduk) / ($n_penduduk * $total_x2_data_penduduk - $total_x_data_penduduk ** 2);
               ?>
@@ -212,9 +166,9 @@
 
     <div class='card shadow mb-4 border-0'>
       <div class='card-body'>
-        <h6 class="font-weight-bold">Koefisien Regresi (a)</h6>
+        <h6 class="font-weight-bold">Intersep (a)</h6>
         <p><?= $a_penduduk ?></p>
-        <h6 class="font-weight-bold">Intersep (b)</h6>
+        <h6 class="font-weight-bold">Koefisien Regresi (b)</h6>
         <p><?= $b_penduduk ?></p>
       </div>
     </div>
@@ -250,7 +204,6 @@
             <tbody>
               <?php
               $x_data_penduduk = 1;
-              $n_penduduk = count($nilai_penduduk);
 
               $total_mad = 0;
               $total_mse = 0;
@@ -418,17 +371,6 @@
                 <th>XY</th>
               </tr>
             </thead>
-            <tfoot>
-              <tr>
-                <th>Periode</th>
-                <th>Nilai Dependen</th>
-                <th>X</th>
-                <th>Y</th>
-                <th>X^2</th>
-                <th>Y^2</th>
-                <th>XY</th>
-              </tr>
-            </tfoot>
             <tbody>
               <?php
               $total_x_data_migrasi = 0;
@@ -436,6 +378,7 @@
               $total_x2_data_migrasi = 0;
               $x_data_migrasi = 1;
               $xy_migrasi = 0;
+              $n_migrasi = count($nilai_migrasi);
               for ($i = 0; $i < count($nilai_migrasi); $i++) {
                 $x2_data_migrasi = $x_data_migrasi ** 2;
                 $y2_data_migrasi = $nilai_migrasi[$i] ** 2;
@@ -458,7 +401,7 @@
               }
 
               echo "<tr>";
-              echo "<th colspan='2'>Total Dataset</th>";
+              echo "<th colspan='2'>Total</th>";
               echo "<th>" . $total_x_data_migrasi . "</th>";
               echo "<th>" . $total_y_data_migrasi . "</th>";
               echo "<th>" . $total_x2_data_migrasi . "</th>";
@@ -466,42 +409,6 @@
               echo "<th>" . $total_xy_migrasi . "</th>";
               echo "</tr>";
 
-              $last_data = end($periode_migrasi);
-              $prev_forecast = end($nilai_migrasi);
-
-              for ($year = $last_data + 1; $year <= $uji_periode; $year++) {
-                $forecast = $b0_migrasi + $b1_migrasi * $prev_forecast;
-                $x2_data_migrasi = $x_data_migrasi ** 2;
-                $y2_data_migrasi = round($forecast) ** 2;
-                $xy_migrasi = $x_data_migrasi * round($forecast);
-                echo "<tr>";
-                echo "<td>" . $year . "</td>";
-                echo "<td>" . round($forecast) . "</td>";
-                echo "<td>" . $x_data_migrasi . "</td>";
-                echo "<td>" . round($forecast) . "</td>";
-                echo "<td>" . round($x2_data_migrasi) . "</td>";
-                echo "<td>" . round($y2_data_migrasi) . "</td>";
-                echo "<td>" . round($xy_migrasi) . "</td>";
-                echo "</tr>";
-                $prev_forecast = $forecast;
-                $total_x_data_migrasi += $x_data_migrasi;
-                $total_y_data_migrasi += $forecast;
-                $total_x2_data_migrasi += $x2_data_migrasi;
-                $total_y2_data_migrasi += $y2_data_migrasi;
-                $total_xy_migrasi += $xy_migrasi;
-                $x_data_migrasi++;
-              }
-
-              echo "<tr>";
-              echo "<th colspan='2'>Total Dataset & Prediksi</th>";
-              echo "<th>" . $total_x_data_migrasi . "</th>";
-              echo "<th>" . round($total_y_data_migrasi) . "</th>";
-              echo "<th>" . round($total_x2_data_migrasi) . "</th>";
-              echo "<th>" . round($total_y2_data_migrasi) . "</th>";
-              echo "<th>" . round($total_xy_migrasi) . "</th>";
-              echo "</tr>";
-
-              $n_migrasi = $x_data_migrasi - 1;
               $a_migrasi = (($total_y_data_migrasi * $total_x2_data_migrasi) - ($total_x_data_migrasi * $total_xy_migrasi)) / (($n_migrasi * $total_x2_data_migrasi) - ($total_x_data_migrasi ** 2));
               $b_migrasi = ($n_migrasi * $total_xy_migrasi - $total_x_data_migrasi * $total_y_data_migrasi) / ($n_migrasi * $total_x2_data_migrasi - $total_x_data_migrasi ** 2);
               ?>
@@ -513,9 +420,9 @@
 
     <div class='card shadow mb-4 border-0'>
       <div class='card-body'>
-        <h6 class="font-weight-bold">Koefisien Regresi (a)</h6>
+        <h6 class="font-weight-bold">Intersep (a)</h6>
         <p><?= $a_migrasi ?></p>
-        <h6 class="font-weight-bold">Intersep (b)</h6>
+        <h6 class="font-weight-bold">Koefisien Regresi (b)</h6>
         <p><?= $b_migrasi ?></p>
       </div>
     </div>
@@ -551,7 +458,6 @@
             <tbody>
               <?php
               $x_data_migrasi = 1;
-              $n_migrasi = count($nilai_migrasi);
 
               $total_mad = 0;
               $total_mse = 0;
