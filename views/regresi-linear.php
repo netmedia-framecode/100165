@@ -341,7 +341,7 @@
         <h5 class="card-title">Hasil Prediksi - Jumlah Penduduk</h5>
       </div>
       <div class='card-body'>
-        <p>Prediksi Penduduk pada tahun <?= $uji_periode ?> adalah <strong><?= round($forecast) ?></strong></p>
+        <p>Prediksi Penduduk pada tahun <?= $uji_periode ?> adalah <strong><?= round($prediksi_penduduk) ?></strong></p>
       </div>
     </div>
 
@@ -642,7 +642,7 @@
         <h5 class="card-title">Hasil Prediksi - Jumlah Migrasi</h5>
       </div>
       <div class='card-body'>
-        <p>Prediksi Migrasi pada tahun <?= $uji_periode ?> adalah <strong><?= round($forecast) ?></strong></p>
+        <p>Prediksi Migrasi pada tahun <?= $uji_periode ?> adalah <strong><?= round($prediksi_migrasi) ?></strong></p>
       </div>
     </div>
 
