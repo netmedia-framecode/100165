@@ -28,6 +28,7 @@ require_once("templates/top.php");
           </p>
 
           <?php
+          $uji_periode = 2017;
           $periode_penduduk = array();
           $nilai_penduduk = array();
           $periode_migrasi = array();
@@ -57,7 +58,6 @@ require_once("templates/top.php");
             return array($b0, $b1, $mean_y);
           }
           list($b0_penduduk, $b1_penduduk, $mean_y_penduduk) = hitungRegresi($nilai_penduduk);
-          list($b0_migrasi, $b1_migrasi, $mean_y_migrasi) = hitungRegresi($nilai_migrasi);
           ?>
 
           <!--grafik-->
