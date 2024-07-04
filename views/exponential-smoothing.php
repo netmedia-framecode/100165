@@ -189,7 +189,8 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
     $mae = $total_absolut_error / ($count_predict + 1);
     $mse = $total_square_error / ($count + 1);
     $rmse = sqrt($mse);
-    $mae_percentage = ($mae / $total_actual) * 100;
+    $rata_rata_actual = $total_actual / ($count + 1);
+    $mae_percentage = ($mae / $rata_rata_actual) * 100;
     ?>
 
     <div class="card shadow mb-4 border-0">
@@ -201,7 +202,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
         <p>MAE = <?= round($mae); ?></p>
         <p>MSE = <?= round($mse); ?></p>
         <p>RMSE = <?= round($rmse); ?></p>
-        <p>Nilai error MAE dalam persen = <?= round($mae_percentage); ?>%</p>
+        <p>Nilai error MAE dalam persen = <?= round($mae_percentage, 2); ?>%</p>
       </div>
     </div>
 
@@ -486,7 +487,8 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
     $mae = $total_absolut_error / ($count_predict + 1);
     $mse = $total_square_error / ($count + 1);
     $rmse = sqrt($mse);
-    $mae_percentage = ($mae / $total_actual) * 100;
+    $rata_rata_actual = $total_actual / ($count + 1);
+    $mae_percentage = ($mae / $rata_rata_actual) * 100;
     ?>
 
     <div class="card shadow mb-4 border-0">
@@ -498,7 +500,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
         <p>MAE = <?= round($mae); ?></p>
         <p>MSE = <?= round($mse); ?></p>
         <p>RMSE = <?= round($rmse); ?></p>
-        <p>Nilai error MAE dalam persen = <?= round($mae_percentage); ?>%</p>
+        <p>Nilai error MAE dalam persen = <?= round($mae_percentage, 2); ?>%</p>
       </div>
     </div>
 
@@ -573,7 +575,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   data: <?= json_encode($actual_values) ?>,
                   borderColor: 'rgba(255, 99, 132, 1)',
                   borderWidth: 1,
-                  borderDash: [5, 5] 
+                  borderDash: [5, 5]
                 },
                 {
                   label: 'Prediksi',
@@ -587,9 +589,9 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
             options: {
               scales: {
                 y: {
-                  beginAtZero: false, 
-                  suggestedMin: <?= min($actual_values) ?>, 
-                  suggestedMax: <?= max($actual_values) ?> 
+                  beginAtZero: false,
+                  suggestedMin: <?= min($actual_values) ?>,
+                  suggestedMax: <?= max($actual_values) ?>
                 }
               }
             }
