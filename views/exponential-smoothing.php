@@ -190,7 +190,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
     $mse = $total_square_error / ($count + 1);
     $rmse = sqrt($mse);
     $rata_rata_actual = $total_actual / ($count + 1);
-    $mae_percentage = ($mae / $rata_rata_actual) * 100;
+    $mae_percentage = ($mae / $total_actual) * 100;
     ?>
 
     <div class="card shadow mb-4 border-0">
@@ -488,7 +488,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
     $mse = $total_square_error / ($count + 1);
     $rmse = sqrt($mse);
     $rata_rata_actual = $total_actual / ($count + 1);
-    $mae_percentage = ($mae / $rata_rata_actual) * 100;
+    $mae_percentage = ($mae / $total_actual) * 100;
     ?>
 
     <div class="card shadow mb-4 border-0">
