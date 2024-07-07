@@ -1,62 +1,6 @@
 <?php error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING); ?>
 <div class="row">
   <div class="col-lg-6">
-    <div class="card shadow mb-3">
-      <div class="card-header shadow">
-        <h5 class="card-title">Rumus Regresi Linear - Jumlah Penduduk</h5>
-      </div>
-      <div class="card-body">
-        <p>Y<sub>t</sub> = b<sub>0</sub> + b<sub>1</sub>Y<sub>t-1</sub></p>
-        <p>Dimana:</p>
-        <ul>
-          <li><strong>Y<sub>t</sub></strong> adalah nilai variabel pada waktu t.</li>
-          <li><strong>Y<sub>t-1</sub></strong> adalah nilai variabel pada waktu t-1.</li>
-          <li><strong>b<sub>0</sub></strong> adalah intersep (nilai Y ketika X = 0).</li>
-          <li><strong>b<sub>1</sub></strong> adalah koefisien regresi (perubahan Y untuk setiap perubahan satu unit Y sebelumnya).</li>
-        </ul>
-
-        <h6 class="font-weight-bold">Perhitungan b0 dan b1</h6>
-        <p>Untuk menghitung b<sub>0</sub> dan b<sub>1</sub>, Anda dapat menggunakan rumus berikut:</p>
-        <ul>
-          <li><strong>b<sub>1</sub> = Σ((Y<sub>t-1</sub> - Ȳ<sub>t-1</sub>)(Y<sub>t</sub> - Ȳ<sub>t</sub>)) / Σ((Y<sub>t-1</sub> - Ȳ<sub>t-1</sub>)<sup>2</sup>)</strong></li>
-          <li><strong>b<sub>0</sub> = Ȳ<sub>t</sub> - b<sub>1</sub>Ȳ<sub>t-1</sub></strong></li>
-          <li><strong>Σ</strong> adalah simbol sigma yang menunjukkan penjumlahan.</li>
-          <li><strong>Ȳ<sub>t-1</sub></strong> adalah rata-rata dari variabel Y pada waktu t-1.</li>
-          <li><strong>Ȳ<sub>t</sub></strong> adalah rata-rata dari variabel Y pada waktu t.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-6">
-    <div class="card shadow mb-3">
-      <div class="card-header shadow">
-        <h5 class="card-title">Rumus Regresi Linear - Jumlah Migrasi</h5>
-      </div>
-      <div class="card-body">
-        <p>Y<sub>t</sub> = b<sub>0</sub> + b<sub>1</sub>Y<sub>t-1</sub></p>
-        <p>Dimana:</p>
-        <ul>
-          <li><strong>Y<sub>t</sub></strong> adalah nilai variabel pada waktu t.</li>
-          <li><strong>Y<sub>t-1</sub></strong> adalah nilai variabel pada waktu t-1.</li>
-          <li><strong>b<sub>0</sub></strong> adalah intersep (nilai Y ketika X = 0).</li>
-          <li><strong>b<sub>1</sub></strong> adalah koefisien regresi (perubahan Y untuk setiap perubahan satu unit Y sebelumnya).</li>
-        </ul>
-
-        <h6 class="font-weight-bold">Perhitungan b0 dan b1</h6>
-        <p>Untuk menghitung b<sub>0</sub> dan b<sub>1</sub>, Anda dapat menggunakan rumus berikut:</p>
-        <ul>
-          <li><strong>b<sub>1</sub> = Σ((Y<sub>t-1</sub> - Ȳ<sub>t-1</sub>)(Y<sub>t</sub> - Ȳ<sub>t</sub>)) / Σ((Y<sub>t-1</sub> - Ȳ<sub>t-1</sub>)<sup>2</sup>)</strong></li>
-          <li><strong>b<sub>0</sub> = Ȳ<sub>t</sub> - b<sub>1</sub>Ȳ<sub>t-1</sub></strong></li>
-          <li><strong>Σ</strong> adalah simbol sigma yang menunjukkan penjumlahan.</li>
-          <li><strong>Ȳ<sub>t-1</sub></strong> adalah rata-rata dari variabel Y pada waktu t-1.</li>
-          <li><strong>Ȳ<sub>t</sub></strong> adalah rata-rata dari variabel Y pada waktu t.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-6">
     <?php
     // Ambil data variabel dependen dari session
     $uji_periode = $_SESSION['project_prediksi_pertumbuhan_penduduk']['prediksi']['uji_periode'];
@@ -209,8 +153,10 @@
               $total_mse = 0;
               $total_mape = 0;
               $error = 0;
+              $total_error = 0;
               $absolute_error = 0;
               $total_absolute_error = 0;
+              $total_actual = 0;
 
               for ($i = 0; $i < $n_penduduk; $i++) {
                 $prediksi_penduduk = $a_penduduk + $b_penduduk * ($i + 1);
@@ -222,9 +168,9 @@
                 echo "<td>" . $nilai_penduduk[$i] . "</td>";
                 echo "<td>" . round($prediksi_penduduk, 3) . "</td>";
 
-                $mad = abs($nilai_penduduk[$i] - $prediksi_penduduk);
-                $mse = pow($nilai_penduduk[$i] - $prediksi_penduduk, 2);
-                $mape = abs(($nilai_penduduk[$i] - $prediksi_penduduk) / $nilai_penduduk[$i]) * 100;
+                $mad = abs($nilai_penduduk[$i] - $prediksi_penduduk) / ($i + 1);
+                $mse = pow($nilai_penduduk[$i] - $prediksi_penduduk, 2) / ($i + 1);
+                $mape = abs(($nilai_penduduk[$i] - $prediksi_penduduk) / $nilai_penduduk[$i]) * 100 / ($i + 1);
 
                 echo "<td>" . round($mad, 3) . "</td>";
                 echo "<td>" . round($mse, 3) . "</td>";
@@ -233,9 +179,11 @@
                 echo "<td>" . round($absolute_error, 3) . "</td>";
                 echo "</tr>";
 
+                $total_actual += $nilai_penduduk[$i];
                 $total_mad += $mad;
                 $total_mse += $mse;
                 $total_mape += $mape;
+                $total_error += $error;
                 $total_absolute_error += $absolute_error;
 
                 $x_data_penduduk++;
@@ -262,17 +210,18 @@
                 echo "</tr>";
 
                 $prev_forecast = $forecast;
-                $total_absolute_error += $absolute_error;
+                $total_error += $error;
                 $x_data_penduduk++;
               }
 
               $average_mad = $total_mad / $n_penduduk;
               $average_mse = $total_mse / $n_penduduk;
-              $average_mape = $total_mape / $n_penduduk;
-              $average_mae = $total_absolute_error / ($x_data_penduduk - 1);
+              $average_mape = $total_mape / $n_penduduk * 100;
+              $average_mae = $total_absolute_error / $n_penduduk;
 
               $total_nilai_penduduk = array_sum($nilai_penduduk);
-              $mae_percentage = ($average_mae / $total_nilai_penduduk) * 100;
+              $rata_rata_actual = $total_actual / $n_penduduk;
+              $mae_percentage = ($average_mae / $rata_rata_actual) * 100;
 
               echo "<tr>";
               echo "<td colspan='3'><strong>Rata-rata</strong></td>";
@@ -280,7 +229,7 @@
               echo "<td><strong>" . round($average_mse, 3) . "</strong></td>";
               echo "<td><strong>" . round($average_mape, 3) . "</strong></td>";
               echo "<td><strong>" . round($average_mae, 3) . "</strong></td>";
-              echo "<td><strong>" . round($mae_percentage) . "%</strong></td>";
+              echo "<td><strong>" . round($mae_percentage, 2) . "%</strong></td>";
               echo "</tr>";
               ?>
             </tbody>
@@ -302,7 +251,7 @@
       <div class='card-body'>
         <h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>
         <p>Error = <?= round($average_mae, 3) ?></p>
-        <p>Error dalam persen = <?= round($mae_percentage) ?>%</p>
+        <p>Error dalam persen = <?= round($mae_percentage, 2) ?>%</p>
       </div>
     </div>
   </div>
@@ -463,8 +412,10 @@
               $total_mse = 0;
               $total_mape = 0;
               $error = 0;
+              $total_error = 0;
               $absolute_error = 0;
               $total_absolute_error = 0;
+              $total_actual = 0;
 
               for ($i = 0; $i < $n_migrasi; $i++) {
                 $prediksi_migrasi = $a_migrasi + $b_migrasi * ($i + 1);
@@ -476,9 +427,9 @@
                 echo "<td>" . $nilai_migrasi[$i] . "</td>";
                 echo "<td>" . round($prediksi_migrasi, 3) . "</td>";
 
-                $mad = abs($nilai_migrasi[$i] - $prediksi_migrasi);
-                $mse = pow($nilai_migrasi[$i] - $prediksi_migrasi, 2);
-                $mape = abs(($nilai_migrasi[$i] - $prediksi_migrasi) / $nilai_migrasi[$i]) * 100;
+                $mad = abs($nilai_migrasi[$i] - $prediksi_migrasi) / ($i + 1);
+                $mse = pow($nilai_migrasi[$i] - $prediksi_migrasi, 2) / ($i + 1);
+                $mape = abs(($nilai_migrasi[$i] - $prediksi_migrasi) / $nilai_migrasi[$i]) * 100 / ($i + 1);
 
                 echo "<td>" . round($mad, 3) . "</td>";
                 echo "<td>" . round($mse, 3) . "</td>";
@@ -487,9 +438,11 @@
                 echo "<td>" . round($absolute_error, 3) . "</td>";
                 echo "</tr>";
 
+                $total_actual += $nilai_migrasi[$i];
                 $total_mad += $mad;
                 $total_mse += $mse;
                 $total_mape += $mape;
+                $total_error += $error;
                 $total_absolute_error += $absolute_error;
 
                 $x_data_migrasi++;
@@ -516,17 +469,18 @@
                 echo "</tr>";
 
                 $prev_forecast = $forecast;
-                $total_absolute_error += $absolute_error;
+                $total_error += $error;
                 $x_data_migrasi++;
               }
 
               $average_mad = $total_mad / $n_migrasi;
               $average_mse = $total_mse / $n_migrasi;
-              $average_mape = $total_mape / $n_migrasi;
-              $average_mae = $total_absolute_error / ($x_data_migrasi - 1);
+              $average_mape = $total_mape / $n_migrasi * 100;
+              $average_mae = $total_absolute_error / $n_migrasi;
 
               $total_nilai_migrasi = array_sum($nilai_migrasi);
-              $mae_percentage = ($average_mae / $total_nilai_migrasi) * 100;
+              $rata_rata_actual = $total_actual / $n_migrasi;
+              $mae_percentage = ($average_mae / $rata_rata_actual) * 100;
 
               echo "<tr>";
               echo "<td colspan='3'><strong>Rata-rata</strong></td>";
@@ -534,7 +488,7 @@
               echo "<td><strong>" . round($average_mse, 3) . "</strong></td>";
               echo "<td><strong>" . round($average_mape, 3) . "</strong></td>";
               echo "<td><strong>" . round($average_mae, 3) . "</strong></td>";
-              echo "<td><strong>" . round($mae_percentage) . "%</strong></td>";
+              echo "<td><strong>" . round($mae_percentage, 2) . "%</strong></td>";
               echo "</tr>";
               ?>
             </tbody>
@@ -556,7 +510,7 @@
       <div class='card-body'>
         <h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>
         <p>Error = <?= round($average_mae, 3) ?></p>
-        <p>Error dalam persen = <?= round($mae_percentage) ?>%</p>
+        <p>Error dalam persen = <?= round($mae_percentage, 2) ?>%</p>
       </div>
     </div>
   </div>

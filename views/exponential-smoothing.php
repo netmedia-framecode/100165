@@ -66,6 +66,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                 <th class="text-center">Error</th>
                 <th class="text-center">Absolut Error</th>
                 <th class="text-center">Square Error</th>
+                <th class="text-center">MSE</th>
                 <th class="text-center">MAPE</th>
               </tr>
             </thead>
@@ -77,6 +78,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
               $total_error = 0;
               $total_absolut_error = 0;
               $total_square_error = 0;
+              $total_mse = 0;
               $total_mape = 0;
               $count = 0;
               $count_predict = 0;
@@ -96,6 +98,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>0</td>";
                   echo "<td>0</td>";
                   echo "<td>0</td>";
+                  echo "<td>0</td>";
                   echo "<td></td>";
                   echo "</tr>";
 
@@ -106,11 +109,13 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   $error = $data['jumlah'] - $forecast;
                   $absolut_error = abs($error);
                   $square_error = pow($error, 2);
-                  $mape = abs(($data['jumlah'] - $forecast) / $data['jumlah']);
+                  $mse = pow(($data['jumlah'] - $forecast), 2) / ($key + 1);
+                  $mape = abs(($data['jumlah'] - $forecast) / $data['jumlah']) * 100 / ($key + 1);
 
                   $total_error += $error;
                   $total_absolut_error += $absolut_error;
                   $total_square_error += $square_error;
+                  $total_mse += $mse;
                   $total_mape += $mape;
                   $count++;
                   $count_predict++;
@@ -122,6 +127,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>" . round($error) . "</td>";
                   echo "<td>" . round($absolut_error) . "</td>";
                   echo "<td>" . round($square_error) . "</td>";
+                  echo "<td>" . round($mse) . "</td>";
                   echo "<td>" . round($mape, 3) . "%</td>";
                   echo "</tr>";
 
@@ -138,11 +144,10 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                 if ($first_predict_periode == $periode) {
                   $forecast = $alpha * $prev_actual + (1 - $alpha) * $prev_forecast_penduduk;
                   $prev_forecast_penduduk = $forecast;
-                  $error = 0 - $forecast;
+                  $error = $total_error / ($count + 1);
                   $absolut_error = abs($error);
 
                   // $total_error += $error;
-                  $total_absolut_error += $absolut_error;
                   $count_predict++;
 
                   echo "<tr>";
@@ -151,6 +156,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>" . round($forecast) . "</td>";
                   echo "<td>" . round($error) . "</td>";
                   echo "<td>" . round($absolut_error) . "</td>";
+                  echo "<td></td>";
                   echo "<td></td>";
                   echo "<td></td>";
                   echo "</tr>";
@@ -161,15 +167,15 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   $absolut_error = abs($error);
 
                   // $total_error += $error;
-                  $total_absolut_error += $absolut_error;
                   $count_predict++;
 
                   echo "<tr>";
                   echo "<td>" . $periode . "</td>";
                   echo "<td></td>";
                   echo "<td>" . round($forecast) . "</td>";
-                  echo "<td>" . round($error) . "</td>";
+                  echo "<td></td>";
                   echo "<td>" . round($absolut_error) . "</td>";
+                  echo "<td></td>";
                   echo "<td></td>";
                   echo "<td></td>";
                   echo "</tr>";
@@ -186,23 +192,19 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
 
     <?php
     $mean_error = $total_error / ($count + 1);
-    $mae = $total_absolut_error / ($count_predict + 1);
-    $mse = $total_square_error / ($count + 1);
+    $mae = $total_absolut_error / ($count + 1);
+    $mse = $total_mse / ($count + 1);
+    $mape = ($total_mape / ($count + 1)) * 100;
     $rmse = sqrt($mse);
     $rata_rata_actual = $total_actual / ($count + 1);
-    $mae_percentage = ($mae / $total_actual) * 100;
+    $mae_percentage = ($mae / $rata_rata_actual) * 100;
     ?>
 
     <div class="card shadow mb-4 border-0">
-      <div class="card-header shadow">
-        <h5 class="card-title">Nilai error</h5>
-      </div>
       <div class="card-body">
-        <p>Mean Error = <?= round($mean_error); ?></p>
-        <p>MAE = <?= round($mae); ?></p>
-        <p>MSE = <?= round($mse); ?></p>
-        <p>RMSE = <?= round($rmse); ?></p>
-        <p>Nilai error MAE dalam persen = <?= round($mae_percentage, 2); ?>%</p>
+        <h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>
+        <p>Error = <?= round($mae, 3) ?></p>
+        <p>Error dalam persen = <?= round($mae_percentage, 2) ?>%</p>
       </div>
     </div>
 
@@ -364,6 +366,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                 <th class="text-center">Error</th>
                 <th class="text-center">Absolut Error</th>
                 <th class="text-center">Square Error</th>
+                <th class="text-center">MSE</th>
                 <th class="text-center">MAPE</th>
               </tr>
             </thead>
@@ -375,6 +378,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
               $total_error = 0;
               $total_absolut_error = 0;
               $total_square_error = 0;
+              $total_mse = 0;
               $total_mape = 0;
               $count = 0;
               $count_predict = 0;
@@ -394,6 +398,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>0</td>";
                   echo "<td>0</td>";
                   echo "<td>0</td>";
+                  echo "<td>0</td>";
                   echo "<td></td>";
                   echo "</tr>";
 
@@ -404,11 +409,13 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   $error = $data['jumlah'] - $forecast;
                   $absolut_error = abs($error);
                   $square_error = pow($error, 2);
-                  $mape = abs(($data['jumlah'] - $forecast) / $data['jumlah']);
+                  $mse = pow(($data['jumlah'] - $forecast), 2) / ($key + 1);
+                  $mape = abs(($data['jumlah'] - $forecast) / $data['jumlah']) * 100 / ($key + 1);
 
                   $total_error += $error;
                   $total_absolut_error += $absolut_error;
                   $total_square_error += $square_error;
+                  $total_mse += $mse;
                   $total_mape += $mape;
                   $count++;
                   $count_predict++;
@@ -420,7 +427,8 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>" . round($error) . "</td>";
                   echo "<td>" . round($absolut_error) . "</td>";
                   echo "<td>" . round($square_error) . "</td>";
-                  echo "<td>" . round($mape, 3) . "%</td>";
+                  echo "<td>" . round($mse) . "</td>";
+                  echo "<td>" . round($mape) . "%</td>";
                   echo "</tr>";
 
                   $prev_actual = $data['jumlah'];
@@ -436,11 +444,10 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                 if ($first_predict_periode == $periode) {
                   $forecast = $alpha * $prev_actual + (1 - $alpha) * $prev_forecast_penduduk;
                   $prev_forecast_penduduk = $forecast;
-                  $error = 0 - $forecast;
+                  $error = $total_error / ($count + 1);
                   $absolut_error = abs($error);
 
                   // $total_error += $error;
-                  $total_absolut_error += $absolut_error;
                   $count_predict++;
 
                   echo "<tr>";
@@ -449,6 +456,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>" . round($forecast) . "</td>";
                   echo "<td>" . round($error) . "</td>";
                   echo "<td>" . round($absolut_error) . "</td>";
+                  echo "<td></td>";
                   echo "<td></td>";
                   echo "<td></td>";
                   echo "</tr>";
@@ -459,15 +467,15 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   $absolut_error = abs($error);
 
                   // $total_error += $error;
-                  $total_absolut_error += $absolut_error;
                   $count_predict++;
 
                   echo "<tr>";
                   echo "<td>" . $periode . "</td>";
                   echo "<td></td>";
                   echo "<td>" . round($forecast) . "</td>";
-                  echo "<td>" . round($error) . "</td>";
+                  echo "<td></td>";
                   echo "<td>" . round($absolut_error) . "</td>";
+                  echo "<td></td>";
                   echo "<td></td>";
                   echo "<td></td>";
                   echo "</tr>";
@@ -484,23 +492,19 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
 
     <?php
     $mean_error = $total_error / ($count + 1);
-    $mae = $total_absolut_error / ($count_predict + 1);
-    $mse = $total_square_error / ($count + 1);
+    $mae = $total_absolut_error / ($count + 1);
+    $mse = $total_mse / ($count + 1);
+    $mape = ($total_mape / ($count + 1)) * 100;
     $rmse = sqrt($mse);
     $rata_rata_actual = $total_actual / ($count + 1);
-    $mae_percentage = ($mae / $total_actual) * 100;
+    $mae_percentage = ($mae / $rata_rata_actual) * 100;
     ?>
 
     <div class="card shadow mb-4 border-0">
-      <div class="card-header shadow">
-        <h5 class="card-title">Nilai error</h5>
-      </div>
       <div class="card-body">
-        <p>Mean Error = <?= round($mean_error); ?></p>
-        <p>MAE = <?= round($mae); ?></p>
-        <p>MSE = <?= round($mse); ?></p>
-        <p>RMSE = <?= round($rmse); ?></p>
-        <p>Nilai error MAE dalam persen = <?= round($mae_percentage, 2); ?>%</p>
+        <h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>
+        <p>Error = <?= round($mae, 3) ?></p>
+        <p>Error dalam persen = <?= round($mae_percentage, 2) ?>%</p>
       </div>
     </div>
 
