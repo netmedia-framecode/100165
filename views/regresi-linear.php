@@ -170,11 +170,11 @@
 
                 $mad = abs($nilai_penduduk[$i] - $prediksi_penduduk) / ($i + 1);
                 $mse = pow($nilai_penduduk[$i] - $prediksi_penduduk, 2) / ($i + 1);
-                $mape = abs(($nilai_penduduk[$i] - $prediksi_penduduk) / $nilai_penduduk[$i]) * 100 / ($i + 1);
+                $mape = abs(($nilai_penduduk[$i] - $prediksi_penduduk) / $nilai_penduduk[$i]);
 
                 echo "<td>" . round($mad, 3) . "</td>";
                 echo "<td>" . round($mse, 3) . "</td>";
-                echo "<td>" . round($mape, 3) . "</td>";
+                echo "<td>" . round($mape, 4) . "</td>";
                 echo "<td>" . round($error, 3) . "</td>";
                 echo "<td>" . round($absolute_error, 3) . "</td>";
                 echo "</tr>";
@@ -204,30 +204,35 @@
                 echo "<td>" . round($prediksi_penduduk, 3) . "</td>";
                 echo "<td></td>";
                 echo "<td></td>";
-                echo "<td></td>";
+                echo "<td>0</td>";
                 echo "<td>" . round($error, 3) . "</td>";
                 echo "<td>" . round($absolute_error, 3) . "</td>";
                 echo "</tr>";
 
                 $prev_forecast = $forecast;
                 $total_error += $error;
-                $x_data_penduduk++;
               }
 
               $average_mad = $total_mad / $n_penduduk;
               $average_mse = $total_mse / $n_penduduk;
-              $average_mape = $total_mape / $n_penduduk * 100;
+              $average_mape = $total_mape / ($x_data_penduduk - 1);
               $average_mae = $total_absolute_error / $n_penduduk;
 
               $total_nilai_penduduk = array_sum($nilai_penduduk);
               $rata_rata_actual = $total_actual / $n_penduduk;
+              $mape_percentage = ($average_mape / ($x_data_penduduk+1)) * 100;
               $mae_percentage = ($average_mae / $rata_rata_actual) * 100;
+
+              $r_a = ($n_penduduk*$total_xy_penduduk)-($total_x_data_penduduk*$total_y_data_penduduk);
+              $r_b = sqrt(($n_penduduk*$total_x2_data_penduduk)-pow($total_x_data_penduduk, 2));
+              $r_c = sqrt(($n_penduduk*$total_y2_data_penduduk)-pow($total_y_data_penduduk, 2));
+              $r_koefisien = $r_a/($r_b*$r_c);
 
               echo "<tr>";
               echo "<td colspan='3'><strong>Rata-rata</strong></td>";
               echo "<td><strong>" . round($average_mad, 3) . "</strong></td>";
               echo "<td><strong>" . round($average_mse, 3) . "</strong></td>";
-              echo "<td><strong>" . round($average_mape, 3) . "</strong></td>";
+              echo "<td><strong>" . round($average_mape, 4) . "</strong></td>";
               echo "<td><strong>" . round($average_mae, 3) . "</strong></td>";
               echo "<td><strong>" . round($mae_percentage, 2) . "%</strong></td>";
               echo "</tr>";
@@ -249,9 +254,16 @@
 
     <div class='card shadow mb-4 border-0'>
       <div class='card-body'>
-        <h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>
-        <p>Error = <?= round($average_mae, 3) ?></p>
-        <p>Error dalam persen = <?= round($mae_percentage, 2) ?>%</p>
+        <h6 class='font-weight-bold'>Error menggunakan Metode MAPE</h6>
+        <p>Error = <?= round($average_mape, 4) ?></p>
+        <p>Error dalam persen = <?= round($mape_percentage, 2) ?>%</p>
+      </div>
+    </div>
+
+    <div class='card shadow mb-4 border-0'>
+      <div class='card-body'>
+        <h6 class='font-weight-bold'>Nilai r Koefisien Korelasi Pearson</h6>
+        <p>r = <?= round($r_koefisien, 3) ?></p>
       </div>
     </div>
   </div>
@@ -429,11 +441,11 @@
 
                 $mad = abs($nilai_migrasi[$i] - $prediksi_migrasi) / ($i + 1);
                 $mse = pow($nilai_migrasi[$i] - $prediksi_migrasi, 2) / ($i + 1);
-                $mape = abs(($nilai_migrasi[$i] - $prediksi_migrasi) / $nilai_migrasi[$i]) * 100 / ($i + 1);
+                $mape = abs(($nilai_migrasi[$i] - $prediksi_migrasi) / $nilai_migrasi[$i]);
 
                 echo "<td>" . round($mad, 3) . "</td>";
                 echo "<td>" . round($mse, 3) . "</td>";
-                echo "<td>" . round($mape, 3) . "</td>";
+                echo "<td>" . round($mape, 4) . "</td>";
                 echo "<td>" . round($error, 3) . "</td>";
                 echo "<td>" . round($absolute_error, 3) . "</td>";
                 echo "</tr>";
@@ -463,30 +475,35 @@
                 echo "<td>" . round($prediksi_migrasi, 3) . "</td>";
                 echo "<td></td>";
                 echo "<td></td>";
-                echo "<td></td>";
+                echo "<td>0</td>";
                 echo "<td>" . round($error, 3) . "</td>";
                 echo "<td>" . round($absolute_error, 3) . "</td>";
                 echo "</tr>";
 
                 $prev_forecast = $forecast;
                 $total_error += $error;
-                $x_data_migrasi++;
               }
 
               $average_mad = $total_mad / $n_migrasi;
               $average_mse = $total_mse / $n_migrasi;
-              $average_mape = $total_mape / $n_migrasi * 100;
+              $average_mape = $total_mape / ($x_data_migrasi - 1);
               $average_mae = $total_absolute_error / $n_migrasi;
 
               $total_nilai_migrasi = array_sum($nilai_migrasi);
               $rata_rata_actual = $total_actual / $n_migrasi;
+              $mape_percentage = ($average_mape / ($x_data_migrasi+1)) * 100;
               $mae_percentage = ($average_mae / $rata_rata_actual) * 100;
+
+              $r_a = ($n_migrasi*$total_xy_migrasi)-($total_x_data_migrasi*$total_y_data_migrasi);
+              $r_b = sqrt(($n_migrasi*$total_x2_data_migrasi)-pow($total_x_data_migrasi, 2));
+              $r_c = sqrt(($n_migrasi*$total_y2_data_migrasi)-pow($total_y_data_migrasi, 2));
+              $r_koefisien = $r_a/($r_b*$r_c);
 
               echo "<tr>";
               echo "<td colspan='3'><strong>Rata-rata</strong></td>";
               echo "<td><strong>" . round($average_mad, 3) . "</strong></td>";
               echo "<td><strong>" . round($average_mse, 3) . "</strong></td>";
-              echo "<td><strong>" . round($average_mape, 3) . "</strong></td>";
+              echo "<td><strong>" . round($average_mape, 4) . "</strong></td>";
               echo "<td><strong>" . round($average_mae, 3) . "</strong></td>";
               echo "<td><strong>" . round($mae_percentage, 2) . "%</strong></td>";
               echo "</tr>";
@@ -508,9 +525,16 @@
 
     <div class='card shadow mb-4 border-0'>
       <div class='card-body'>
-        <h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>
-        <p>Error = <?= round($average_mae, 3) ?></p>
-        <p>Error dalam persen = <?= round($mae_percentage, 2) ?>%</p>
+        <h6 class='font-weight-bold'>Error menggunakan Metode MAPE</h6>
+        <p>Error = <?= round($average_mape, 4) ?></p>
+        <p>Error dalam persen = <?= round($mape_percentage, 2) ?>%</p>
+      </div>
+    </div>
+
+    <div class='card shadow mb-4 border-0'>
+      <div class='card-body'>
+        <h6 class='font-weight-bold'>Nilai r Koefisien Korelasi Pearson</h6>
+        <p>r = <?= round($r_koefisien, 3) ?></p>
       </div>
     </div>
   </div>
