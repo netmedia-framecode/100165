@@ -215,12 +215,12 @@
 
               $average_mad = $total_mad / $n_penduduk;
               $average_mse = $total_mse / $n_penduduk;
-              $average_mape = $total_mape / ($x_data_penduduk - 1);
+              $average_mape = $total_mape / $n_penduduk;
               $average_mae = $total_absolute_error / $n_penduduk;
 
               $total_nilai_penduduk = array_sum($nilai_penduduk);
               $rata_rata_actual = $total_actual / $n_penduduk;
-              $mape_percentage = ($average_mape / ($x_data_penduduk+1)) * 100;
+              $mape_percentage = ($average_mape / $n_penduduk) * 100;
               $mae_percentage = ($average_mae / $rata_rata_actual) * 100;
 
               $r_a = ($n_penduduk*$total_xy_penduduk)-($total_x_data_penduduk*$total_y_data_penduduk);
@@ -486,12 +486,12 @@
 
               $average_mad = $total_mad / $n_migrasi;
               $average_mse = $total_mse / $n_migrasi;
-              $average_mape = $total_mape / ($x_data_migrasi - 1);
+              $average_mape = $total_mape / $n_migrasi;
               $average_mae = $total_absolute_error / $n_migrasi;
 
               $total_nilai_migrasi = array_sum($nilai_migrasi);
               $rata_rata_actual = $total_actual / $n_migrasi;
-              $mape_percentage = ($average_mape / ($x_data_migrasi+1)) * 100;
+              $mape_percentage = ($average_mape / $n_migrasi) * 100;
               $mae_percentage = ($average_mae / $rata_rata_actual) * 100;
 
               $r_a = ($n_migrasi*$total_xy_migrasi)-($total_x_data_migrasi*$total_y_data_migrasi);

@@ -99,7 +99,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>0</td>";
                   echo "<td>0</td>";
                   echo "<td>0</td>";
-                  echo "<td></td>";
+                  echo "<td>0</td>";
                   echo "</tr>";
 
                   $total_actual += $data['jumlah'];
@@ -158,7 +158,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>" . round($absolut_error) . "</td>";
                   echo "<td></td>";
                   echo "<td></td>";
-                  echo "<td></td>";
+                  echo "<td>0</td>";
                   echo "</tr>";
                 } else {
                   $forecast = $alpha * 0 + (1 - $alpha) * $prev_forecast_penduduk;
@@ -177,7 +177,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>" . round($absolut_error) . "</td>";
                   echo "<td></td>";
                   echo "<td></td>";
-                  echo "<td></td>";
+                  echo "<td>0</td>";
                   echo "</tr>";
 
                   $prev_actual = $data['jumlah'];
@@ -194,17 +194,18 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
     $mean_error = $total_error / ($count + 1);
     $mae = $total_absolut_error / ($count + 1);
     $mse = $total_mse / ($count + 1);
-    $mape = ($total_mape / ($count + 1)) * 100;
+    $mape = ($total_mape / ($count + 1));
     $rmse = sqrt($mse);
     $rata_rata_actual = $total_actual / ($count + 1);
+    $mape_percentage = ($mape / ($count + 1)) * 100;
     $mae_percentage = ($mae / $rata_rata_actual) * 100;
     ?>
 
     <div class="card shadow mb-4 border-0">
       <div class="card-body">
-        <h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>
-        <p>Error = <?= round($mae, 3) ?></p>
-        <p>Error dalam persen = <?= round($mae_percentage, 2) ?>%</p>
+        <h6 class='font-weight-bold'>Error menggunakan Metode MAPE</h6>
+        <p>Error = <?= round($mape, 3) ?></p>
+        <p>Error dalam persen = <?= round($mape_percentage, 2) ?>%</p>
       </div>
     </div>
 
@@ -399,7 +400,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>0</td>";
                   echo "<td>0</td>";
                   echo "<td>0</td>";
-                  echo "<td></td>";
+                  echo "<td>0</td>";
                   echo "</tr>";
 
                   $total_actual += $data['jumlah'];
@@ -458,7 +459,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>" . round($absolut_error) . "</td>";
                   echo "<td></td>";
                   echo "<td></td>";
-                  echo "<td></td>";
+                  echo "<td>0</td>";
                   echo "</tr>";
                 } else {
                   $forecast = $alpha * 0 + (1 - $alpha) * $prev_forecast_penduduk;
@@ -477,7 +478,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>" . round($absolut_error) . "</td>";
                   echo "<td></td>";
                   echo "<td></td>";
-                  echo "<td></td>";
+                  echo "<td>0</td>";
                   echo "</tr>";
 
                   $prev_actual = $data['jumlah'];
@@ -494,17 +495,18 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
     $mean_error = $total_error / ($count + 1);
     $mae = $total_absolut_error / ($count + 1);
     $mse = $total_mse / ($count + 1);
-    $mape = ($total_mape / ($count + 1)) * 100;
+    $mape = ($total_mape / ($count + 1));
     $rmse = sqrt($mse);
     $rata_rata_actual = $total_actual / ($count + 1);
+    $mape_percentage = ($mape / ($count + 1)) * 100;
     $mae_percentage = ($mae / $rata_rata_actual) * 100;
     ?>
 
     <div class="card shadow mb-4 border-0">
       <div class="card-body">
-        <h6 class='font-weight-bold'>Error menggunakan Metode MAE</h6>
-        <p>Error = <?= round($mae, 3) ?></p>
-        <p>Error dalam persen = <?= round($mae_percentage, 2) ?>%</p>
+        <h6 class='font-weight-bold'>Error menggunakan Metode MAPE</h6>
+        <p>Error = <?= round($mape, 3) ?></p>
+        <p>Error dalam persen = <?= round($mape_percentage, 2) ?>%</p>
       </div>
     </div>
 
