@@ -110,7 +110,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   $absolut_error = abs($error);
                   $square_error = pow($error, 2);
                   $mse = pow(($data['jumlah'] - $forecast), 2) / ($key + 1);
-                  $mape = abs(($data['jumlah'] - $forecast) / $data['jumlah']) * 100 / ($key + 1);
+                  $mape = abs(($data['jumlah'] - $forecast) / $data['jumlah']);
 
                   $total_error += $error;
                   $total_absolut_error += $absolut_error;
@@ -411,7 +411,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   $absolut_error = abs($error);
                   $square_error = pow($error, 2);
                   $mse = pow(($data['jumlah'] - $forecast), 2) / ($key + 1);
-                  $mape = abs(($data['jumlah'] - $forecast) / $data['jumlah']) * 100 / ($key + 1);
+                  $mape = abs(($data['jumlah'] - $forecast) / $data['jumlah']);
 
                   $total_error += $error;
                   $total_absolut_error += $absolut_error;
@@ -429,7 +429,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
                   echo "<td>" . round($absolut_error) . "</td>";
                   echo "<td>" . round($square_error) . "</td>";
                   echo "<td>" . round($mse) . "</td>";
-                  echo "<td>" . round($mape) . "%</td>";
+                  echo "<td>" . round($mape, 3) . "%</td>";
                   echo "</tr>";
 
                   $prev_actual = $data['jumlah'];
