@@ -13,7 +13,7 @@ require_once("../templates/views_top.php"); ?>
 
   <div class="row">
 
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="col-xl-6 col-md-6 mb-4">
       <div class="card border-left-primary shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
@@ -30,7 +30,7 @@ require_once("../templates/views_top.php"); ?>
       </div>
     </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="col-xl-6 col-md-6 mb-4">
       <div class="card border-left-success shadow h-100 py-2" onclick="window.location.href='dataset'" style="cursor: pointer;">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
@@ -41,40 +41,6 @@ require_once("../templates/views_top.php"); ?>
             </div>
             <div class="col-auto">
               <i class="bi bi-bar-chart-steps fa-2x"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-danger shadow h-100 py-2" onclick="window.location.href='regression-linear'" style="cursor: pointer;">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                Regression Linear</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800"><?= mysqli_num_rows($views_hasil_rl) ?></div>
-            </div>
-            <div class="col-auto">
-              <i class="bi bi-calculator fa-2x"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-danger shadow h-100 py-2" onclick="window.location.href='exponential-smoothing'" style="cursor: pointer;">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                Exponential Smoothing</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800"><?= mysqli_num_rows($views_hasil_es) ?></div>
-            </div>
-            <div class="col-auto">
-              <i class="bi bi-calculator fa-2x"></i>
             </div>
           </div>
         </div>
