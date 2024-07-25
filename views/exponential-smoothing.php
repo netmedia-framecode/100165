@@ -224,6 +224,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
         $actual_values = [];
         $forecast_values = [];
         $labels = [];
+        $first_forecast_done = false;
 
         foreach ($views_dependen as $key => $data) {
           if ($data['nama_variabel'] == $variabel_dependen) {
@@ -525,6 +526,7 @@ $variabel_dependen_id = $_SESSION['project_prediksi_pertumbuhan_penduduk']['pred
         $actual_values = [];
         $forecast_values = [];
         $labels = [];
+        $first_forecast_migrasi_done = false;
 
         foreach ($views_dependen as $key => $data) {
           if ($data['nama_variabel'] == $variabel_dependen) {

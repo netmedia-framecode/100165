@@ -68,6 +68,7 @@
               $total_x2_data_penduduk = 0;
               $x_data_penduduk = 1;
               $xy_penduduk = 0;
+              $total_actual = 0;
               $n_penduduk = count($nilai_penduduk);
               for ($i = 0; $i < count($nilai_penduduk); $i++) {
                 $x2_data_penduduk = $x_data_penduduk ** 2;
@@ -88,6 +89,7 @@
                 $total_y2_data_penduduk += $y2_data_penduduk;
                 $total_xy_penduduk += $xy_penduduk;
                 $x_data_penduduk++;
+                $total_actual += $nilai_penduduk[$i];
               }
 
               echo "<tr>";
@@ -99,6 +101,12 @@
               echo "<th>" . $total_xy_penduduk . "</th>";
               echo "</tr>";
 
+              $r_a = ($n_penduduk*$total_xy_penduduk)-($total_x_data_penduduk*$total_y_data_penduduk);
+              $r_b = sqrt(($n_penduduk*$total_x2_data_penduduk)-pow($total_x_data_penduduk, 2));
+              $r_c = sqrt(($n_penduduk*$total_y2_data_penduduk)-pow($total_y_data_penduduk, 2));
+              $r_koefisien = $r_a/($r_b*$r_c);
+
+              $rata_rata_actual = $total_actual / $n_penduduk;
               $a_penduduk = (($total_y_data_penduduk * $total_x2_data_penduduk) - ($total_x_data_penduduk * $total_xy_penduduk)) / (($n_penduduk * $total_x2_data_penduduk) - ($total_x_data_penduduk ** 2));
               $b_penduduk = ($n_penduduk * $total_xy_penduduk - $total_x_data_penduduk * $total_y_data_penduduk) / ($n_penduduk * $total_x2_data_penduduk - $total_x_data_penduduk ** 2);
               ?>
@@ -110,9 +118,16 @@
 
     <div class='card shadow mb-4 border-0'>
       <div class='card-body'>
-        <h6 class="font-weight-bold">Intersep (a)</h6>
+        <h6 class='font-weight-bold'>Nilai r Koefisien Korelasi Pearson</h6>
+        <p>r = <?= round($r_koefisien, 3) ?></p>
+      </div>
+    </div>
+
+    <div class='card shadow mb-4 border-0'>
+      <div class='card-body'>
+        <h6 class="font-weight-bold">a (Intercept)</h6>
         <p><?= $a_penduduk ?></p>
-        <h6 class="font-weight-bold">Koefisien Regresi (b)</h6>
+        <h6 class="font-weight-bold">b (Slope)</h6>
         <p><?= $b_penduduk ?></p>
       </div>
     </div>
@@ -127,7 +142,7 @@
                 <th>Jumlah Penduduk</th>
                 <th>Prediksi</th>
                 <th>MAD</th>
-                <th>MSE</th>
+                <th>Square Error</th>
                 <th>MAPE</th>
                 <th>Error</th>
                 <th>Absolute Error</th>
@@ -139,7 +154,7 @@
                 <th>Jumlah Penduduk</th>
                 <th>Prediksi</th>
                 <th>MAD</th>
-                <th>MSE</th>
+                <th>Square Error</th>
                 <th>MAPE</th>
                 <th>Error</th>
                 <th>Absolute Error</th>
@@ -150,13 +165,19 @@
               $x_data_penduduk = 1;
 
               $total_mad = 0;
-              $total_mse = 0;
+              $total_square_error = 0;
               $total_mape = 0;
               $error = 0;
               $total_error = 0;
               $absolute_error = 0;
               $total_absolute_error = 0;
-              $total_actual = 0;
+
+              $check_hasil_rl = "SELECT * FROM hasil_rl WHERE var_dependen='jumlah_penduduk'";
+              $data_rl = mysqli_query($conn, $check_hasil_rl);
+              if (mysqli_num_rows($data_rl) > 0) {
+                $delete_sql = "DELETE FROM hasil_rl WHERE var_dependen='jumlah_penduduk'";
+                mysqli_query($conn, $delete_sql);
+              }
 
               for ($i = 0; $i < $n_penduduk; $i++) {
                 $prediksi_penduduk = $a_penduduk + $b_penduduk * ($i + 1);
@@ -168,25 +189,36 @@
                 echo "<td>" . $nilai_penduduk[$i] . "</td>";
                 echo "<td>" . round($prediksi_penduduk, 3) . "</td>";
 
-                $mad = abs($nilai_penduduk[$i] - $prediksi_penduduk) / ($i + 1);
-                $mse = pow($nilai_penduduk[$i] - $prediksi_penduduk, 2) / ($i + 1);
+                $mad = abs($nilai_penduduk[$i] - $rata_rata_actual);
+                $square_error = pow($error, 2);
                 $mape = abs(($nilai_penduduk[$i] - $prediksi_penduduk) / $nilai_penduduk[$i]);
 
                 echo "<td>" . round($mad, 3) . "</td>";
-                echo "<td>" . round($mse, 3) . "</td>";
+                echo "<td>" . round($square_error, 3) . "</td>";
                 echo "<td>" . round($mape, 4) . "</td>";
                 echo "<td>" . round($error, 3) . "</td>";
                 echo "<td>" . round($absolute_error, 3) . "</td>";
                 echo "</tr>";
 
-                $total_actual += $nilai_penduduk[$i];
                 $total_mad += $mad;
-                $total_mse += $mse;
+                $total_square_error += $square_error;
                 $total_mape += $mape;
                 $total_error += $error;
                 $total_absolute_error += $absolute_error;
 
                 $x_data_penduduk++;
+                
+                $year = $periode_penduduk[$i];
+                $aktual = round($nilai_penduduk[$i]);
+                $hasil_prediksi = round($prediksi_penduduk);
+                $check_hasil_rl = "SELECT * FROM hasil_rl WHERE periode='$year' AND var_dependen='jumlah_penduduk'";
+                $data_rl = mysqli_query($conn, $check_hasil_rl);
+                if (mysqli_num_rows($data_rl) == 0) {
+                  $insert_sql = "INSERT INTO hasil_rl(periode,var_dependen,aktual,hasil_prediksi) VALUES('$year','jumlah_penduduk','$aktual','$hasil_prediksi')";
+                } else if (mysqli_num_rows($data_rl) > 0) {
+                  $insert_sql = "UPDATE hasil_rl SET aktual='$aktual', hasil_prediksi='$hasil_prediksi' WHERE periode='$year' AND var_dependen='jumlah_penduduk'";
+                }
+                mysqli_query($conn, $insert_sql);
               }
 
               $last_data = end($periode_penduduk);
@@ -205,36 +237,44 @@
                 echo "<td></td>";
                 echo "<td></td>";
                 echo "<td>0</td>";
-                echo "<td>" . round($error, 3) . "</td>";
-                echo "<td>" . round($absolute_error, 3) . "</td>";
+                echo "<td></td>";
+                echo "<td></td>";
                 echo "</tr>";
 
                 $prev_forecast = $forecast;
                 $total_error += $error;
+                $x_data_penduduk++;
+                
+                $aktual = 0;
+                $hasil_prediksi = round($prediksi_penduduk);
+                $check_hasil_rl = "SELECT * FROM hasil_rl WHERE periode='$year' AND var_dependen='jumlah_penduduk'";
+                $data_rl = mysqli_query($conn, $check_hasil_rl);
+                if (mysqli_num_rows($data_rl) == 0) {
+                  $insert_sql = "INSERT INTO hasil_rl(periode,var_dependen,aktual,hasil_prediksi) VALUES('$year','jumlah_penduduk','$aktual','$hasil_prediksi')";
+                } else if (mysqli_num_rows($data_rl) == 1) {
+                  $insert_sql = "UPDATE hasil_rl SET aktual='$aktual', hasil_prediksi='$hasil_prediksi' WHERE periode='$year' AND var_dependen='jumlah_penduduk'";
+                }
+                mysqli_query($conn, $insert_sql);
               }
 
               $average_mad = $total_mad / $n_penduduk;
-              $average_mse = $total_mse / $n_penduduk;
+              $average_square_error = $total_square_error / $n_penduduk;
               $average_mape = $total_mape / $n_penduduk;
               $average_mae = $total_absolute_error / $n_penduduk;
 
               $total_nilai_penduduk = array_sum($nilai_penduduk);
-              $rata_rata_actual = $total_actual / $n_penduduk;
               $mape_percentage = ($average_mape / $n_penduduk) * 100;
               $mae_percentage = ($average_mae / $rata_rata_actual) * 100;
 
-              $r_a = ($n_penduduk*$total_xy_penduduk)-($total_x_data_penduduk*$total_y_data_penduduk);
-              $r_b = sqrt(($n_penduduk*$total_x2_data_penduduk)-pow($total_x_data_penduduk, 2));
-              $r_c = sqrt(($n_penduduk*$total_y2_data_penduduk)-pow($total_y_data_penduduk, 2));
-              $r_koefisien = $r_a/($r_b*$r_c);
-
               echo "<tr>";
-              echo "<td colspan='3'><strong>Rata-rata</strong></td>";
+              echo "<td><strong>Rata-rata</strong></td>";
+              echo "<td><strong>" . round($rata_rata_actual) . "</strong></td>";
+              echo "<td><strong></strong></td>";
               echo "<td><strong>" . round($average_mad, 3) . "</strong></td>";
-              echo "<td><strong>" . round($average_mse, 3) . "</strong></td>";
-              echo "<td><strong>" . round($average_mape, 4) . "</strong></td>";
-              echo "<td><strong>" . round($average_mae, 3) . "</strong></td>";
-              echo "<td><strong>" . round($mae_percentage, 2) . "%</strong></td>";
+              echo "<td><strong>" . round($total_square_error, 3) . "</strong></td>";
+              echo "<td><strong></strong></td>";
+              echo "<td><strong></strong></td>";
+              echo "<td><strong>" . round($total_absolute_error, 3) . "</strong></td>";
               echo "</tr>";
               ?>
             </tbody>
@@ -257,13 +297,6 @@
         <h6 class='font-weight-bold'>Error menggunakan Metode MAPE</h6>
         <p>Error = <?= round($average_mape, 4) ?></p>
         <p>Error dalam persen = <?= round($mape_percentage, 2) ?>%</p>
-      </div>
-    </div>
-
-    <div class='card shadow mb-4 border-0'>
-      <div class='card-body'>
-        <h6 class='font-weight-bold'>Nilai r Koefisien Korelasi Pearson</h6>
-        <p>r = <?= round($r_koefisien, 3) ?></p>
       </div>
     </div>
   </div>
@@ -339,6 +372,7 @@
               $total_x2_data_migrasi = 0;
               $x_data_migrasi = 1;
               $xy_migrasi = 0;
+              $total_actual = 0;
               $n_migrasi = count($nilai_migrasi);
               for ($i = 0; $i < count($nilai_migrasi); $i++) {
                 $x2_data_migrasi = $x_data_migrasi ** 2;
@@ -359,6 +393,7 @@
                 $total_y2_data_migrasi += $y2_data_migrasi;
                 $total_xy_migrasi += $xy_migrasi;
                 $x_data_migrasi++;
+                $total_actual += $nilai_migrasi[$i];
               }
 
               echo "<tr>";
@@ -370,6 +405,12 @@
               echo "<th>" . $total_xy_migrasi . "</th>";
               echo "</tr>";
 
+              $r_a = ($n_migrasi*$total_xy_migrasi)-($total_x_data_migrasi*$total_y_data_migrasi);
+              $r_b = sqrt(($n_migrasi*$total_x2_data_migrasi)-pow($total_x_data_migrasi, 2));
+              $r_c = sqrt(($n_migrasi*$total_y2_data_migrasi)-pow($total_y_data_migrasi, 2));
+              $r_koefisien = $r_a/($r_b*$r_c);
+
+              $rata_rata_actual = $total_actual / $n_migrasi;
               $a_migrasi = (($total_y_data_migrasi * $total_x2_data_migrasi) - ($total_x_data_migrasi * $total_xy_migrasi)) / (($n_migrasi * $total_x2_data_migrasi) - ($total_x_data_migrasi ** 2));
               $b_migrasi = ($n_migrasi * $total_xy_migrasi - $total_x_data_migrasi * $total_y_data_migrasi) / ($n_migrasi * $total_x2_data_migrasi - $total_x_data_migrasi ** 2);
               ?>
@@ -381,9 +422,16 @@
 
     <div class='card shadow mb-4 border-0'>
       <div class='card-body'>
-        <h6 class="font-weight-bold">Intersep (a)</h6>
+        <h6 class='font-weight-bold'>Nilai r Koefisien Korelasi Pearson</h6>
+        <p>r = <?= round($r_koefisien, 3) ?></p>
+      </div>
+    </div>
+
+    <div class='card shadow mb-4 border-0'>
+      <div class='card-body'>
+        <h6 class="font-weight-bold">a (Intercept)</h6>
         <p><?= $a_migrasi ?></p>
-        <h6 class="font-weight-bold">Koefisien Regresi (b)</h6>
+        <h6 class="font-weight-bold">b (Slope)</h6>
         <p><?= $b_migrasi ?></p>
       </div>
     </div>
@@ -395,10 +443,9 @@
             <thead>
               <tr>
                 <th>Periode</th>
-                <th>Jumlah Penduduk</th>
+                <th>Jumlah Migrasi</th>
                 <th>Prediksi</th>
-                <th>MAD</th>
-                <th>MSE</th>
+                <th>Square Error</th>
                 <th>MAPE</th>
                 <th>Error</th>
                 <th>Absolute Error</th>
@@ -407,10 +454,9 @@
             <tfoot>
               <tr>
                 <th>Periode</th>
-                <th>Jumlah Penduduk</th>
+                <th>Jumlah Migrasi</th>
                 <th>Prediksi</th>
-                <th>MAD</th>
-                <th>MSE</th>
+                <th>Square Error</th>
                 <th>MAPE</th>
                 <th>Error</th>
                 <th>Absolute Error</th>
@@ -421,13 +467,19 @@
               $x_data_migrasi = 1;
 
               $total_mad = 0;
-              $total_mse = 0;
+              $total_square_error = 0;
               $total_mape = 0;
               $error = 0;
               $total_error = 0;
               $absolute_error = 0;
               $total_absolute_error = 0;
-              $total_actual = 0;
+
+              $check_hasil_rl = "SELECT * FROM hasil_rl WHERE var_dependen='jumlah_migrasi'";
+              $data_rl = mysqli_query($conn, $check_hasil_rl);
+              if (mysqli_num_rows($data_rl) > 0) {
+                $sql = "DELETE FROM hasil_rl WHERE var_dependen='jumlah_migrasi'";
+                mysqli_query($conn, $sql);
+              }
 
               for ($i = 0; $i < $n_migrasi; $i++) {
                 $prediksi_migrasi = $a_migrasi + $b_migrasi * ($i + 1);
@@ -439,25 +491,35 @@
                 echo "<td>" . $nilai_migrasi[$i] . "</td>";
                 echo "<td>" . round($prediksi_migrasi, 3) . "</td>";
 
-                $mad = abs($nilai_migrasi[$i] - $prediksi_migrasi) / ($i + 1);
-                $mse = pow($nilai_migrasi[$i] - $prediksi_migrasi, 2) / ($i + 1);
+                $mad = abs($nilai_migrasi[$i] - $rata_rata_actual);
+                $square_error = pow($error, 2);
                 $mape = abs(($nilai_migrasi[$i] - $prediksi_migrasi) / $nilai_migrasi[$i]);
 
-                echo "<td>" . round($mad, 3) . "</td>";
-                echo "<td>" . round($mse, 3) . "</td>";
-                echo "<td>" . round($mape, 4) . "</td>";
+                echo "<td>" . round($square_error, 3) . "</td>";
+                echo "<td>" . round($mape, 3) . "</td>";
                 echo "<td>" . round($error, 3) . "</td>";
                 echo "<td>" . round($absolute_error, 3) . "</td>";
                 echo "</tr>";
 
-                $total_actual += $nilai_migrasi[$i];
                 $total_mad += $mad;
-                $total_mse += $mse;
+                $total_square_error += $square_error;
                 $total_mape += $mape;
                 $total_error += $error;
                 $total_absolute_error += $absolute_error;
 
                 $x_data_migrasi++;
+                
+                $year = $periode_migrasi[$i];
+                $aktual = round($nilai_migrasi[$i]);
+                $hasil_prediksi = round($prediksi_migrasi);
+                $check_hasil_rl = "SELECT * FROM hasil_rl WHERE periode='$year' AND var_dependen='jumlah_migrasi'";
+                $data_rl = mysqli_query($conn, $check_hasil_rl);
+                if (mysqli_num_rows($data_rl) == 0) {
+                  $sql = "INSERT INTO hasil_rl(periode,var_dependen,aktual,hasil_prediksi) VALUES('$year','jumlah_migrasi','$aktual','$hasil_prediksi')";
+                } else if (mysqli_num_rows($data_rl) > 0) {
+                  $sql = "UPDATE hasil_rl SET aktual='$aktual', hasil_prediksi='$hasil_prediksi' WHERE periode='$year' AND var_dependen='jumlah_migrasi'";
+                }
+                mysqli_query($conn, $sql);
               }
 
               $last_data = end($periode_migrasi);
@@ -474,38 +536,45 @@
                 echo "<td></td>";
                 echo "<td>" . round($prediksi_migrasi, 3) . "</td>";
                 echo "<td></td>";
-                echo "<td></td>";
                 echo "<td>0</td>";
-                echo "<td>" . round($error, 3) . "</td>";
-                echo "<td>" . round($absolute_error, 3) . "</td>";
+                echo "<td></td>";
+                echo "<td></td>";
                 echo "</tr>";
 
                 $prev_forecast = $forecast;
                 $total_error += $error;
+                $x_data_migrasi++;
+
+                $aktual = 0;
+                $hasil_prediksi = round($prediksi_migrasi);
+                // $sql = mysqli_query($conn, "DELETE FROM hasil_rl WHERE var_dependen='jumlah_migrasi'");
+                $check_hasil_rl = "SELECT * FROM hasil_rl WHERE periode='$year' AND var_dependen='jumlah_migrasi'";
+                $data_rl = mysqli_query($conn, $check_hasil_rl);
+                if (mysqli_num_rows($data_rl) == 0) {
+                  $sql = "INSERT INTO hasil_rl(periode,var_dependen,aktual,hasil_prediksi) VALUES('$year','jumlah_migrasi','$aktual','$hasil_prediksi')";
+                } else if (mysqli_num_rows($data_rl) > 0) {
+                  $sql = "UPDATE hasil_rl SET aktual='$aktual', hasil_prediksi='$hasil_prediksi' WHERE periode='$year' AND var_dependen='jumlah_migrasi'";
+                }
+                mysqli_query($conn, $sql);
               }
 
               $average_mad = $total_mad / $n_migrasi;
-              $average_mse = $total_mse / $n_migrasi;
+              $average_square_error = $total_square_error / $n_migrasi;
               $average_mape = $total_mape / $n_migrasi;
               $average_mae = $total_absolute_error / $n_migrasi;
 
               $total_nilai_migrasi = array_sum($nilai_migrasi);
-              $rata_rata_actual = $total_actual / $n_migrasi;
               $mape_percentage = ($average_mape / $n_migrasi) * 100;
               $mae_percentage = ($average_mae / $rata_rata_actual) * 100;
 
-              $r_a = ($n_migrasi*$total_xy_migrasi)-($total_x_data_migrasi*$total_y_data_migrasi);
-              $r_b = sqrt(($n_migrasi*$total_x2_data_migrasi)-pow($total_x_data_migrasi, 2));
-              $r_c = sqrt(($n_migrasi*$total_y2_data_migrasi)-pow($total_y_data_migrasi, 2));
-              $r_koefisien = $r_a/($r_b*$r_c);
-
               echo "<tr>";
-              echo "<td colspan='3'><strong>Rata-rata</strong></td>";
-              echo "<td><strong>" . round($average_mad, 3) . "</strong></td>";
-              echo "<td><strong>" . round($average_mse, 3) . "</strong></td>";
-              echo "<td><strong>" . round($average_mape, 4) . "</strong></td>";
-              echo "<td><strong>" . round($average_mae, 3) . "</strong></td>";
-              echo "<td><strong>" . round($mae_percentage, 2) . "%</strong></td>";
+              echo "<td><strong>Rata-rata</strong></td>";
+              echo "<td><strong>" . round($rata_rata_actual) . "</strong></td>";
+              echo "<td><strong></strong></td>";
+              echo "<td><strong>" . round($total_square_error, 3) . "</strong></td>";
+              echo "<td><strong></strong></td>";
+              echo "<td><strong></strong></td>";
+              echo "<td><strong>" . round($total_absolute_error, 3) . "</strong></td>";
               echo "</tr>";
               ?>
             </tbody>
@@ -528,13 +597,6 @@
         <h6 class='font-weight-bold'>Error menggunakan Metode MAPE</h6>
         <p>Error = <?= round($average_mape, 4) ?></p>
         <p>Error dalam persen = <?= round($mape_percentage, 2) ?>%</p>
-      </div>
-    </div>
-
-    <div class='card shadow mb-4 border-0'>
-      <div class='card-body'>
-        <h6 class='font-weight-bold'>Nilai r Koefisien Korelasi Pearson</h6>
-        <p>r = <?= round($r_koefisien, 3) ?></p>
       </div>
     </div>
   </div>
@@ -570,177 +632,117 @@
 </div>
 
 <?php
-// Your PHP code for data preparation and linear regression calculation
-// ...
+// Query untuk mendapatkan data
+$rl_penduduk = "SELECT periode, aktual, hasil_prediksi FROM hasil_rl WHERE var_dependen='jumlah_penduduk'";
+$views_rl_penduduk = mysqli_query($conn, $rl_penduduk);
 
-// Prepare data for population chart
-$labels_population = $periode_penduduk;
-$data_population = $nilai_penduduk;
-$last_data_population = end($periode_penduduk);
+// Inisialisasi variabel sebagai array
+$labels_penduduk = [];
+$aktual_penduduk = [];
+$prediksi_penduduk = [];
 
-$prev_forecast_population = end($nilai_penduduk);
-
-for ($year = $last_data_population + 1; $year <= $uji_periode; $year++) {
-  $labels_population[] = $year;
-  $forecast_population = $b0_penduduk + $b1_penduduk * $prev_forecast_population;
-  $data_population[] = $forecast_population;
-  $prev_forecast_population = $forecast_population;
+// Iterasi melalui hasil query dan isi array
+foreach ($views_rl_penduduk as $data_penduduk) {
+  $labels_penduduk[] = $data_penduduk['periode'];
+  $aktual_penduduk[] = $data_penduduk['aktual'];
+  $prediksi_penduduk[] = $data_penduduk['hasil_prediksi'];
 }
 
+// Query untuk mendapatkan data
+$rl_migrasi = "SELECT periode, aktual, hasil_prediksi FROM hasil_rl WHERE var_dependen='jumlah_migrasi'";
+$views_rl_migrasi = mysqli_query($conn, $rl_migrasi);
 
-// Add actual population values to the dataset
-$actual_population = $nilai_penduduk;
+// Inisialisasi variabel sebagai array
+$labels_migrasi = [];
+$aktual_migrasi = [];
+$prediksi_migrasi = [];
 
-for ($year = $last_data_population + 1; $year <= $uji_periode; $year++) {
-  $actual_population[] = $actual_population_periode[$year]; // Assuming $actual_population_periode is an array containing actual population values for each year
-}
-// var_dump($actual_population);
-// Prepare data for migration chart
-$labels_migration = $periode_migrasi;
-$data_migration = $nilai_migrasi;
-$last_data_migration = end($periode_migrasi);
-$prev_forecast_migration = end($nilai_migrasi);
-
-for ($year = $last_data_migration + 1; $year <= $uji_periode; $year++) {
-  $labels_migration[] = $year;
-  $forecast_migration = $b0_migrasi + $b1_migrasi * $prev_forecast_migration;
-  $data_migration[] = $forecast_migration;
-  $prev_forecast_migration = $forecast_migration;
-}
-
-// Add actual migration values to the dataset
-$actual_migration = $nilai_migrasi;
-for ($year = $last_data_migration + 1; $year <= $uji_periode; $year++) {
-  $actual_migration[] = $actual_migration_periode[$year]; // Assuming $actual_migration_periode is an array containing actual migration values for each year
+// Iterasi melalui hasil query dan isi array
+foreach ($views_rl_migrasi as $data_migrasi) {
+  $labels_migrasi[] = $data_migrasi['periode'];
+  $aktual_migrasi[] = $data_migrasi['aktual'];
+  $prediksi_migrasi[] = $data_migrasi['hasil_prediksi'];
 }
 ?>
 
 <script>
-  var ctxPopulation = document.getElementById('chartPopulation').getContext('2d');
-  var chartPopulation = new Chart(ctxPopulation, {
-    type: 'line',
-    data: {
-      labels: <?= json_encode($labels_population) ?>,
-      datasets: [{
-          label: 'Jumlah Penduduk Prediksi',
-          data: <?= json_encode($data_population) ?>,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1,
-          fill: false
-        },
-        {
-          label: 'Jumlah Penduduk Aktual',
-          data: <?= json_encode($actual_population) ?>,
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
-          fill: false
+var ctxPopulation = document.getElementById('chartPopulation').getContext('2d');
+var chartPopulation = new Chart(ctxPopulation, {
+  type: 'line',
+  data: {
+    labels: <?= json_encode($labels_penduduk) ?>,
+    datasets: [{
+        label: 'Jumlah Penduduk Prediksi',
+        data: <?= json_encode($prediksi_penduduk) ?>,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        fill: false
+      },
+      {
+        label: 'Jumlah Penduduk Aktual',
+        data: <?= json_encode($aktual_penduduk) ?>,
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1,
+        fill: false
+      }
+    ]
+  },
+  options: {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Periode'
         }
-      ]
-    },
-    options: {
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Periode'
-          }
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'Jumlah'
-          }
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Jumlah'
         }
       }
     }
-  });
+  }
+});
 
-  var ctxMigration = document.getElementById('chartMigration').getContext('2d');
-  var chartMigration = new Chart(ctxMigration, {
-    type: 'line',
-    data: {
-      labels: <?= json_encode($labels_migration) ?>,
-      datasets: [{
-          label: 'Jumlah Migrasi Prediksi',
-          data: <?= json_encode($data_migration) ?>,
-          borderColor: 'rgba(153, 102, 255, 1)',
-          borderWidth: 1,
-          fill: false
-        },
-        {
-          label: 'Jumlah Migrasi Aktual',
-          data: <?= json_encode($actual_migration) ?>,
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
-          fill: false
+var ctxMigration = document.getElementById('chartMigration').getContext('2d');
+var chartMigration = new Chart(ctxMigration, {
+  type: 'line',
+  data: {
+    labels: <?= json_encode($labels_migrasi) ?>,
+    datasets: [{
+        label: 'Jumlah Migrasi Prediksi',
+        data: <?= json_encode($prediksi_migrasi) ?>,
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 1,
+        fill: false
+      },
+      {
+        label: 'Jumlah Migrasi Aktual',
+        data: <?= json_encode($aktual_migrasi) ?>,
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1,
+        fill: false
+      }
+    ]
+  },
+  options: {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Periode'
         }
-      ]
-    },
-    options: {
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Periode'
-          }
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'Jumlah'
-          }
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Jumlah'
         }
       }
     }
-  });
-
-
-
-  var ctxPopulation = document.getElementById('chartPopulation').getContext('2d');
-  var chartPopulation = new Chart(ctxPopulation, {
-    type: 'line',
-    data: {
-      labels: <?= json_encode($labels_population) ?>,
-      datasets: [{
-          label: 'Jumlah Penduduk Prediksi',
-          data: <?= json_encode($data_population) ?>,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1,
-          fill: false
-        },
-        {
-          label: 'Y_t-1',
-          data: <?= json_encode($yt_minus_1) ?>, // Ini adalah data Y_t-1 yang harus Anda tambahkan
-          borderColor: 'rgba(255, 206, 86, 1)', // Warna garis untuk Y_t-1
-          borderWidth: 1,
-          fill: false
-        },
-        {
-          label: 'Jumlah Penduduk Aktual',
-          data: <?= json_encode($actual_population) ?>,
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
-          fill: false
-        }
-      ]
-    },
-    options: {
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Periode'
-          }
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'Jumlah'
-          }
-        }
-      }
-    }
-  });
+  }
+});
 </script>
 </body>
 

@@ -45,7 +45,7 @@ require_once("../templates/views_top.php"); ?>
             </div> -->
             <div class="form-group for-ses" id="alpha-container">
               <label for="nilai_alpha">Nilai Alpha</label>
-              <input type="range" name="nilai_alpha" class="form-control" id="nilai_alpha" value="0.1" min="0.1" max="1" step="0.1" required>
+              <input type="range" name="nilai_alpha" class="form-control" id="nilai_alpha" value="0.1" min="0.1" max="0.9" step="0.1" required>
               <span id="nilai_migrasi">0.1</span>
               <script>
                 $(document).ready(function() {
