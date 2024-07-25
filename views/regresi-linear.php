@@ -109,6 +109,7 @@
               $rata_rata_actual = $total_actual / $n_penduduk;
               $a_penduduk = (($total_y_data_penduduk * $total_x2_data_penduduk) - ($total_x_data_penduduk * $total_xy_penduduk)) / (($n_penduduk * $total_x2_data_penduduk) - ($total_x_data_penduduk ** 2));
               $b_penduduk = ($n_penduduk * $total_xy_penduduk - $total_x_data_penduduk * $total_y_data_penduduk) / ($n_penduduk * $total_x2_data_penduduk - $total_x_data_penduduk ** 2);
+              $y_penduduk = $a_penduduk."+".$b_penduduk; 
               ?>
             </tbody>
           </table>
@@ -141,8 +142,6 @@
                 <th>Periode</th>
                 <th>Jumlah Penduduk</th>
                 <th>Prediksi</th>
-                <th>MAD</th>
-                <th>Square Error</th>
                 <th>MAPE</th>
                 <th>Error</th>
                 <th>Absolute Error</th>
@@ -153,8 +152,6 @@
                 <th>Periode</th>
                 <th>Jumlah Penduduk</th>
                 <th>Prediksi</th>
-                <th>MAD</th>
-                <th>Square Error</th>
                 <th>MAPE</th>
                 <th>Error</th>
                 <th>Absolute Error</th>
@@ -193,8 +190,6 @@
                 $square_error = pow($error, 2);
                 $mape = abs(($nilai_penduduk[$i] - $prediksi_penduduk) / $nilai_penduduk[$i]);
 
-                echo "<td>" . round($mad, 3) . "</td>";
-                echo "<td>" . round($square_error, 3) . "</td>";
                 echo "<td>" . round($mape, 4) . "</td>";
                 echo "<td>" . round($error, 3) . "</td>";
                 echo "<td>" . round($absolute_error, 3) . "</td>";
@@ -234,8 +229,6 @@
                 echo "<td>" . $year . "</td>";
                 echo "<td></td>";
                 echo "<td>" . round($prediksi_penduduk, 3) . "</td>";
-                echo "<td></td>";
-                echo "<td></td>";
                 echo "<td>0</td>";
                 echo "<td></td>";
                 echo "<td></td>";
@@ -270,8 +263,6 @@
               echo "<td><strong>Rata-rata</strong></td>";
               echo "<td><strong>" . round($rata_rata_actual) . "</strong></td>";
               echo "<td><strong></strong></td>";
-              echo "<td><strong>" . round($average_mad, 3) . "</strong></td>";
-              echo "<td><strong>" . round($total_square_error, 3) . "</strong></td>";
               echo "<td><strong></strong></td>";
               echo "<td><strong></strong></td>";
               echo "<td><strong>" . round($total_absolute_error, 3) . "</strong></td>";
@@ -413,6 +404,7 @@
               $rata_rata_actual = $total_actual / $n_migrasi;
               $a_migrasi = (($total_y_data_migrasi * $total_x2_data_migrasi) - ($total_x_data_migrasi * $total_xy_migrasi)) / (($n_migrasi * $total_x2_data_migrasi) - ($total_x_data_migrasi ** 2));
               $b_migrasi = ($n_migrasi * $total_xy_migrasi - $total_x_data_migrasi * $total_y_data_migrasi) / ($n_migrasi * $total_x2_data_migrasi - $total_x_data_migrasi ** 2);
+              $y_migrasi = $a_migrasi."+".$b_migrasi;
               ?>
             </tbody>
           </table>
@@ -445,7 +437,6 @@
                 <th>Periode</th>
                 <th>Jumlah Migrasi</th>
                 <th>Prediksi</th>
-                <th>Square Error</th>
                 <th>MAPE</th>
                 <th>Error</th>
                 <th>Absolute Error</th>
@@ -456,7 +447,6 @@
                 <th>Periode</th>
                 <th>Jumlah Migrasi</th>
                 <th>Prediksi</th>
-                <th>Square Error</th>
                 <th>MAPE</th>
                 <th>Error</th>
                 <th>Absolute Error</th>
@@ -495,7 +485,6 @@
                 $square_error = pow($error, 2);
                 $mape = abs(($nilai_migrasi[$i] - $prediksi_migrasi) / $nilai_migrasi[$i]);
 
-                echo "<td>" . round($square_error, 3) . "</td>";
                 echo "<td>" . round($mape, 3) . "</td>";
                 echo "<td>" . round($error, 3) . "</td>";
                 echo "<td>" . round($absolute_error, 3) . "</td>";
@@ -536,7 +525,6 @@
                 echo "<td></td>";
                 echo "<td>" . round($prediksi_migrasi, 3) . "</td>";
                 echo "<td></td>";
-                echo "<td>0</td>";
                 echo "<td></td>";
                 echo "<td></td>";
                 echo "</tr>";
@@ -571,7 +559,6 @@
               echo "<td><strong>Rata-rata</strong></td>";
               echo "<td><strong>" . round($rata_rata_actual) . "</strong></td>";
               echo "<td><strong></strong></td>";
-              echo "<td><strong>" . round($total_square_error, 3) . "</strong></td>";
               echo "<td><strong></strong></td>";
               echo "<td><strong></strong></td>";
               echo "<td><strong>" . round($total_absolute_error, 3) . "</strong></td>";
@@ -614,6 +601,7 @@
         <h5 class="card-title">Grafik Prediksi - Jumlah Penduduk</h5>
       </div>
       <div class="card-body">
+        <p>Persamaan Regrasi : <?= $y_penduduk?></p>
         <canvas id="chartPopulation"></canvas>
       </div>
     </div>
@@ -625,6 +613,7 @@
         <h5 class="card-title">Grafik Prediksi - Jumlah Migrasi</h5>
       </div>
       <div class="card-body">
+        <p>Persamaan Regrasi : <?= $y_migrasi?></p>
         <canvas id="chartMigration"></canvas>
       </div>
     </div>
