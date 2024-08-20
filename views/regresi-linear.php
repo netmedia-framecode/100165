@@ -109,7 +109,6 @@
               $rata_rata_actual = $total_actual / $n_penduduk;
               $a_penduduk = (($total_y_data_penduduk * $total_x2_data_penduduk) - ($total_x_data_penduduk * $total_xy_penduduk)) / (($n_penduduk * $total_x2_data_penduduk) - ($total_x_data_penduduk ** 2));
               $b_penduduk = ($n_penduduk * $total_xy_penduduk - $total_x_data_penduduk * $total_y_data_penduduk) / ($n_penduduk * $total_x2_data_penduduk - $total_x_data_penduduk ** 2);
-              $y_penduduk = $a_penduduk."+".$b_penduduk; 
               ?>
             </tbody>
           </table>
@@ -404,7 +403,6 @@
               $rata_rata_actual = $total_actual / $n_migrasi;
               $a_migrasi = (($total_y_data_migrasi * $total_x2_data_migrasi) - ($total_x_data_migrasi * $total_xy_migrasi)) / (($n_migrasi * $total_x2_data_migrasi) - ($total_x_data_migrasi ** 2));
               $b_migrasi = ($n_migrasi * $total_xy_migrasi - $total_x_data_migrasi * $total_y_data_migrasi) / ($n_migrasi * $total_x2_data_migrasi - $total_x_data_migrasi ** 2);
-              $y_migrasi = $a_migrasi."+".$b_migrasi;
               ?>
             </tbody>
           </table>
@@ -593,6 +591,13 @@
 <!--grafik-->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<?php
+
+$y_penduduk = $a_penduduk."+".$b_penduduk;
+$y_migrasi = $a_migrasi."+".$b_migrasi;
+
+?>
+
 <!-- Charts -->
 <div class="row">
   <div class="col-lg-6">
@@ -601,7 +606,7 @@
         <h5 class="card-title">Grafik Prediksi - Jumlah Penduduk</h5>
       </div>
       <div class="card-body">
-        <p>Persamaan Regrasi : <?= $y_penduduk?></p>
+        <p style="position: absolute;top: 0;right: 0;text-align: right;font-size: 12px; padding: 10px;margin-top: 130px;z-index: 999;color: 000;">y : <?= $y_penduduk?></p>
         <canvas id="chartPopulation"></canvas>
       </div>
     </div>
@@ -613,7 +618,7 @@
         <h5 class="card-title">Grafik Prediksi - Jumlah Migrasi</h5>
       </div>
       <div class="card-body">
-        <p>Persamaan Regrasi : <?= $y_migrasi?></p>
+        <p style="position: absolute;top: 0;right: 0;text-align: right;font-size: 12px; padding: 10px;margin-top: 130px;z-index: 999;color: 000;">y : <?= $y_migrasi?></p>
         <canvas id="chartMigration"></canvas>
       </div>
     </div>
@@ -621,6 +626,8 @@
 </div>
 
 <?php
+
+
 // Query untuk mendapatkan data
 $rl_penduduk = "SELECT periode, aktual, hasil_prediksi FROM hasil_rl WHERE var_dependen='jumlah_penduduk'";
 $views_rl_penduduk = mysqli_query($conn, $rl_penduduk);
