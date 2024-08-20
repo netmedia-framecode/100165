@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Waktu pembuatan: 03 Bulan Mei 2024 pada 00.13
--- Versi server: 8.3.0
--- Versi PHP: 8.1.10
+-- Waktu pembuatan: 20 Agu 2024 pada 12.33
+-- Versi server: 8.0.30
+-- Versi PHP: 7.4.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -72,8 +72,10 @@ INSERT INTO `dataset` (`id_dataset`, `id_periode`, `id_variabel`, `jumlah`) VALU
 (64, 13, 60, 3043),
 (65, 14, 59, 227397),
 (66, 14, 60, 3137),
-(67, 15, 59, 228023),
-(68, 15, 60, 3137);
+(67, 15, 59, 228032),
+(68, 15, 60, 3137),
+(83, 16, 60, 3657),
+(84, 16, 59, 228900);
 
 -- --------------------------------------------------------
 
@@ -101,7 +103,7 @@ INSERT INTO `data_periode` (`id_periode`, `periode`) VALUES
 (15, '2022'),
 (16, '2023'),
 (18, '2024'),
-(19, '2025');
+(20, '2025');
 
 -- --------------------------------------------------------
 
@@ -120,8 +122,7 @@ CREATE TABLE `data_uji` (
 --
 
 INSERT INTO `data_uji` (`id_uji`, `periode`, `jumlah`) VALUES
-(3, 2024, 4226),
-(4, 2025, 4636);
+(1, 2024, 25679);
 
 -- --------------------------------------------------------
 
@@ -153,7 +154,7 @@ CREATE TABLE `hasil_es` (
   `periode` int DEFAULT NULL,
   `nilai_alpha` char(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `var_dependen` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `hasil_prediksi` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `hasil_prediksi` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -163,26 +164,14 @@ CREATE TABLE `hasil_es` (
 --
 
 INSERT INTO `hasil_es` (`id_rl`, `periode`, `nilai_alpha`, `var_dependen`, `hasil_prediksi`, `created_at`, `updated_at`) VALUES
-(1, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-11 20:30:16', '2024-03-11 20:30:16'),
-(2, 2025, '0.2', 'jumlah_penduduk', '224564.454', '2024-04-18 21:04:02', '2024-03-12 02:33:40'),
-(3, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:34:25', '2024-03-18 03:34:25'),
-(4, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:34:25', '2024-03-18 03:34:25'),
-(5, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:34:43', '2024-03-18 03:34:43'),
-(6, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:34:43', '2024-03-18 03:34:43'),
-(7, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:35:36', '2024-03-18 03:35:36'),
-(8, 2023, '0.2', 'jumlah_penduduk', '224564.454', '2024-03-18 03:35:36', '2024-03-18 03:35:36'),
-(9, 2024, '0.1', 'jumlah_migrasi', '2230.78538', '2024-04-23 17:04:27', '2024-04-23 17:04:27'),
-(10, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:40:12', '2024-04-24 14:40:12'),
-(11, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:40:32', '2024-04-24 14:40:32'),
-(12, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:41:00', '2024-04-24 14:41:00'),
-(13, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:41:14', '2024-04-24 14:41:14'),
-(14, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:51:35', '2024-04-24 14:51:35'),
-(15, 2024, '0.2', 'jumlah_migrasi', '2663.75184', '2024-04-24 14:52:51', '2024-04-24 14:52:51'),
-(16, 2025, '0.1', 'jumlah_migrasi', '2230.7853893', '2024-05-03 07:21:27', '2024-05-03 07:21:27'),
-(17, 2025, '0.1', 'jumlah_migrasi', '2230.7853893', '2024-05-03 07:21:59', '2024-05-03 07:21:59'),
-(18, 2025, '0.1', 'jumlah_migrasi', '2230.7853893', '2024-05-03 07:23:01', '2024-05-03 07:23:01'),
-(19, 2025, '0.1', 'jumlah_migrasi', '2230.7853893', '2024-05-03 07:30:57', '2024-05-03 07:30:57'),
-(20, 2025, '0.1', 'jumlah_migrasi', '2230.7853893', '2024-05-03 07:31:13', '2024-05-03 07:31:13');
+(1, 2024, '0.1', 'jumlah_penduduk', '222949', '2024-05-08 09:21:36', '2024-07-18 07:30:30'),
+(2, 2024, '0.1', 'jumlah_migrasi', '2373', '2024-05-08 09:21:36', '2024-07-18 07:30:30'),
+(3, 2025, '0.1', 'jumlah_penduduk', '200654', '2024-05-08 09:21:57', '2024-07-23 07:49:42'),
+(4, 2025, '0.1', 'jumlah_migrasi', '2136', '2024-05-08 09:21:57', '2024-07-23 07:49:42'),
+(5, 2027, '0.1', 'jumlah_penduduk', '162530', '2024-05-08 09:35:32', '2024-07-23 07:49:42'),
+(6, 2027, '0.1', 'jumlah_migrasi', '1730', '2024-05-08 09:35:32', '2024-07-23 07:49:43'),
+(7, 2026, '0.1', 'jumlah_penduduk', '180589', '2024-05-08 09:42:38', '2024-07-23 07:49:42'),
+(8, 2026, '0.1', 'jumlah_migrasi', '1922', '2024-05-08 09:42:38', '2024-07-23 07:49:43');
 
 -- --------------------------------------------------------
 
@@ -193,10 +182,9 @@ INSERT INTO `hasil_es` (`id_rl`, `periode`, `nilai_alpha`, `var_dependen`, `hasi
 CREATE TABLE `hasil_rl` (
   `id_rl` int NOT NULL,
   `periode` int DEFAULT NULL,
-  `jumlah_migrasi` char(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `var_independen` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `var_dependen` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `hasil_prediksi` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `aktual` float NOT NULL,
+  `hasil_prediksi` float DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -205,34 +193,33 @@ CREATE TABLE `hasil_rl` (
 -- Dumping data untuk tabel `hasil_rl`
 --
 
-INSERT INTO `hasil_rl` (`id_rl`, `periode`, `jumlah_migrasi`, `var_independen`, `var_dependen`, `hasil_prediksi`, `created_at`, `updated_at`) VALUES
-(1, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:17:32', '2024-05-03 07:17:32'),
-(2, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:19:40', '2024-05-03 07:19:40'),
-(3, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:20:35', '2024-05-03 07:20:35'),
-(4, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:26:40', '2024-05-03 07:26:40'),
-(5, 2025, '2500', 'jumlah_penduduk', 'jumlah_migrasi', '-37094.071089426', '2024-05-03 07:27:10', '2024-05-03 07:27:10'),
-(6, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:29:47', '2024-05-03 07:29:47'),
-(7, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:30:39', '2024-05-03 07:30:39'),
-(8, 2025, '1500', 'jumlah_penduduk', 'jumlah_migrasi', '-37273.322542034', '2024-05-03 07:30:49', '2024-05-03 07:30:49'),
-(9, 2025, '2500', 'jumlah_penduduk', 'jumlah_migrasi', '-37094.071089426', '2024-05-03 07:31:20', '2024-05-03 07:31:20'),
-(10, 2025, '2500', 'jumlah_penduduk', 'jumlah_migrasi', '-37094.071089426', '2024-05-03 07:32:02', '2024-05-03 07:32:02'),
-(11, 2025, '2500', 'jumlah_penduduk', 'jumlah_migrasi', '-37094.071089426', '2024-05-03 07:32:39', '2024-05-03 07:32:39');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `kontak`
---
-
-CREATE TABLE `kontak` (
-  `id_kontak` int NOT NULL,
-  `nama` varchar(75) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `phone` char(12) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `pesan` text COLLATE utf8mb4_general_ci,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `hasil_rl` (`id_rl`, `periode`, `var_dependen`, `aktual`, `hasil_prediksi`, `created_at`, `updated_at`) VALUES
+(3170, 2015, 'jumlah_penduduk', 218669, 219634, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3171, 2016, 'jumlah_penduduk', 220043, 220923, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3172, 2017, 'jumlah_penduduk', 222521, 222212, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3173, 2018, 'jumlah_penduduk', 224409, 223501, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3174, 2019, 'jumlah_penduduk', 226039, 224790, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3175, 2020, 'jumlah_penduduk', 227097, 226079, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3176, 2021, 'jumlah_penduduk', 227397, 227367, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3177, 2022, 'jumlah_penduduk', 228032, 228656, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3178, 2023, 'jumlah_penduduk', 228900, 229945, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3179, 2024, 'jumlah_penduduk', 0, 231234, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3180, 2025, 'jumlah_penduduk', 0, 232523, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3181, 2026, 'jumlah_penduduk', 0, 233812, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3182, 2027, 'jumlah_penduduk', 0, 235100, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3183, 2015, 'jumlah_migrasi', 1499, 1834, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3184, 2016, 'jumlah_migrasi', 2132, 2068, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3185, 2017, 'jumlah_migrasi', 1885, 2302, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3186, 2018, 'jumlah_migrasi', 3145, 2536, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3187, 2019, 'jumlah_migrasi', 3297, 2770, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3188, 2020, 'jumlah_migrasi', 3043, 3004, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3189, 2021, 'jumlah_migrasi', 3137, 3239, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3190, 2022, 'jumlah_migrasi', 3137, 3473, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3191, 2023, 'jumlah_migrasi', 3657, 3707, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3192, 2024, 'jumlah_migrasi', 0, 3941, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3193, 2025, 'jumlah_migrasi', 0, 4175, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3194, 2026, 'jumlah_migrasi', 0, 4409, '2024-07-26 11:20:19', '2024-07-26 11:20:19'),
+(3195, 2027, 'jumlah_migrasi', 0, 4643, '2024-07-26 11:20:19', '2024-07-26 11:20:19');
 
 -- --------------------------------------------------------
 
@@ -278,7 +265,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id_user`, `id_role`, `id_active`, `en_user`, `token`, `name`, `image`, `email`, `password`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, NULL, NULL, 'admin', 'default.svg', 'admin@gmail.com', '$2y$10$//KMATh3ibPoI3nHFp7x/u7vnAbo2WyUgmI4x0CVVrH8ajFhMvbjG', '2023-12-11 12:44:17', '2023-12-11 12:44:17'),
-(2, 4, 2, '2y10zTwts8P9rytW7Gvydm73uu7O89qAYx4uy7rTgo5rbdeZeeL1PWu', '451512', 'Netmedia Framecode', 'default.svg', 'netmediaframecode@gmail.com', '$2y$10$Eeo5RAPIi9ZTR3BV/YW7U./OL632X8v9nRTV6TxE6nRGpiZ/s2Mjy', '2024-04-04 13:40:37', '2024-04-04 13:40:37');
+(2, 4, 1, '2y10wUb7HRjatRViQQ5KA4z9FeFP3dwalJtxdxJdayTjVVQ7og4AipLh', '558883', 'irenpasu@gmail.com', 'default.svg', 'irenpasu@gmail.com', '$2y$10$73gicwgLk/S4ScUi0bFxPObPL72YCpQhEKGc4CNEeuDSQkmBJmlWm', '2024-03-20 09:47:09', '2024-03-20 09:47:49'),
+(3, 4, 2, '2y10Pdfw2qlLCGUsHKS2z3kEeUV78i8xdSvHyKIoZ6pYSnwiWZzWK6KW', '314863', 'Nathalina Dasilva', 'default.svg', 'nenidasilva02@gmail.com', '$2y$10$n9W.jFyiy0RDRTYCfq0cguNJRopa9d2d0K8mz9pcaKV7gz96j7kKm', '2024-04-04 12:52:22', '2024-04-04 12:53:15');
 
 --
 -- Trigger `users`
@@ -294,82 +282,6 @@ CREATE TRIGGER `insert_users` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `user_access_menu`
---
-
-CREATE TABLE `user_access_menu` (
-  `id_access_menu` int NOT NULL,
-  `id_role` int DEFAULT NULL,
-  `id_menu` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `user_access_menu`
---
-
-INSERT INTO `user_access_menu` (`id_access_menu`, `id_role`, `id_menu`) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(3, 1, 3),
-(4, 1, 4),
-(9, 1, 5);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `user_access_sub_menu`
---
-
-CREATE TABLE `user_access_sub_menu` (
-  `id_access_sub_menu` int NOT NULL,
-  `id_role` int DEFAULT NULL,
-  `id_sub_menu` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `user_access_sub_menu`
---
-
-INSERT INTO `user_access_sub_menu` (`id_access_sub_menu`, `id_role`, `id_sub_menu`) VALUES
-(2, 1, 2),
-(3, 1, 3),
-(4, 1, 4),
-(5, 1, 5),
-(6, 1, 6),
-(44, 1, 19),
-(45, 1, 17),
-(51, 1, 73),
-(53, 1, 75),
-(57, 1, 15),
-(58, 1, 78),
-(59, 1, 79),
-(61, 1, 80);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `user_menu`
---
-
-CREATE TABLE `user_menu` (
-  `id_menu` int NOT NULL,
-  `menu` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `user_menu`
---
-
-INSERT INTO `user_menu` (`id_menu`, `menu`) VALUES
-(1, 'User Management'),
-(2, 'Menu Management'),
-(3, 'Kelola Data'),
-(4, 'Laporan'),
-(5, 'Lainnya');
 
 -- --------------------------------------------------------
 
@@ -408,41 +320,6 @@ CREATE TABLE `user_status` (
 INSERT INTO `user_status` (`id_status`, `status`) VALUES
 (1, 'Active'),
 (2, 'No Active');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `user_sub_menu`
---
-
-CREATE TABLE `user_sub_menu` (
-  `id_sub_menu` int NOT NULL,
-  `id_menu` int DEFAULT NULL,
-  `id_active` int DEFAULT '2',
-  `title` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `url` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `icon` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `user_sub_menu`
---
-
-INSERT INTO `user_sub_menu` (`id_sub_menu`, `id_menu`, `id_active`, `title`, `url`, `icon`) VALUES
-(1, 1, 1, 'Users', 'users', 'fas fa-users'),
-(2, 1, 1, 'Role', 'role', 'fas fa-user-cog'),
-(3, 2, 1, 'Menu', 'menu', 'fas fa-fw fa-folder'),
-(4, 2, 1, 'Sub Menu', 'sub-menu', 'fas fa-fw fa-folder-open'),
-(5, 2, 1, 'Menu Access', 'menu-access', 'fas fa-user-lock'),
-(6, 2, 1, 'Sub Menu Access', 'sub-menu-access', 'fas fa-user-lock'),
-(15, 4, 1, 'Ringkasan Hasil', 'ringkasan-hasil', 'fas fa-sticky-note'),
-(17, 3, 1, 'Variabel', 'variabel', 'fas fa-list-ol'),
-(19, 3, 1, 'Periode', 'periode', 'fas fa-list-ol'),
-(73, 3, 1, 'Dataset', 'dataset', 'fas fa-list-ol'),
-(75, 3, 1, 'Data Uji', 'data-uji', 'fas fa-list'),
-(78, 5, 1, 'Tentang', 'tentang', 'fas fa-list-ul'),
-(79, 5, 1, 'Kontak', 'kontak', 'fas fa-comments'),
-(80, 3, 1, 'Prediksi', 'prediksi', 'fas fa-calculator');
 
 --
 -- Indexes for dumped tables
@@ -493,12 +370,6 @@ ALTER TABLE `hasil_rl`
   ADD PRIMARY KEY (`id_rl`);
 
 --
--- Indeks untuk tabel `kontak`
---
-ALTER TABLE `kontak`
-  ADD PRIMARY KEY (`id_kontak`);
-
---
 -- Indeks untuk tabel `tentang`
 --
 ALTER TABLE `tentang`
@@ -513,28 +384,6 @@ ALTER TABLE `users`
   ADD KEY `id_active` (`id_active`);
 
 --
--- Indeks untuk tabel `user_access_menu`
---
-ALTER TABLE `user_access_menu`
-  ADD PRIMARY KEY (`id_access_menu`),
-  ADD KEY `id_role` (`id_role`),
-  ADD KEY `id_menu` (`id_menu`);
-
---
--- Indeks untuk tabel `user_access_sub_menu`
---
-ALTER TABLE `user_access_sub_menu`
-  ADD PRIMARY KEY (`id_access_sub_menu`),
-  ADD KEY `id_role` (`id_role`),
-  ADD KEY `id_sub_menu` (`id_sub_menu`);
-
---
--- Indeks untuk tabel `user_menu`
---
-ALTER TABLE `user_menu`
-  ADD PRIMARY KEY (`id_menu`);
-
---
 -- Indeks untuk tabel `user_role`
 --
 ALTER TABLE `user_role`
@@ -545,14 +394,6 @@ ALTER TABLE `user_role`
 --
 ALTER TABLE `user_status`
   ADD PRIMARY KEY (`id_status`);
-
---
--- Indeks untuk tabel `user_sub_menu`
---
-ALTER TABLE `user_sub_menu`
-  ADD PRIMARY KEY (`id_sub_menu`),
-  ADD KEY `id_menu` (`id_menu`),
-  ADD KEY `id_active` (`id_active`);
 
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
@@ -568,43 +409,37 @@ ALTER TABLE `auth`
 -- AUTO_INCREMENT untuk tabel `dataset`
 --
 ALTER TABLE `dataset`
-  MODIFY `id_dataset` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id_dataset` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT untuk tabel `data_periode`
 --
 ALTER TABLE `data_periode`
-  MODIFY `id_periode` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_periode` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT untuk tabel `data_uji`
 --
 ALTER TABLE `data_uji`
-  MODIFY `id_uji` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_uji` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `data_variabel`
 --
 ALTER TABLE `data_variabel`
-  MODIFY `id_variabel` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id_variabel` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT untuk tabel `hasil_es`
 --
 ALTER TABLE `hasil_es`
-  MODIFY `id_rl` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id_rl` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT untuk tabel `hasil_rl`
 --
 ALTER TABLE `hasil_rl`
-  MODIFY `id_rl` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT untuk tabel `kontak`
---
-ALTER TABLE `kontak`
-  MODIFY `id_kontak` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_rl` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3196;
 
 --
 -- AUTO_INCREMENT untuk tabel `tentang`
@@ -616,25 +451,7 @@ ALTER TABLE `tentang`
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT untuk tabel `user_access_menu`
---
-ALTER TABLE `user_access_menu`
-  MODIFY `id_access_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT untuk tabel `user_access_sub_menu`
---
-ALTER TABLE `user_access_sub_menu`
-  MODIFY `id_access_sub_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
-
---
--- AUTO_INCREMENT untuk tabel `user_menu`
---
-ALTER TABLE `user_menu`
-  MODIFY `id_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_role`
@@ -647,12 +464,6 @@ ALTER TABLE `user_role`
 --
 ALTER TABLE `user_status`
   MODIFY `id_status` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT untuk tabel `user_sub_menu`
---
-ALTER TABLE `user_sub_menu`
-  MODIFY `id_sub_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -671,27 +482,6 @@ ALTER TABLE `dataset`
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `user_role` (`id_role`),
   ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`id_active`) REFERENCES `user_status` (`id_status`);
-
---
--- Ketidakleluasaan untuk tabel `user_access_menu`
---
-ALTER TABLE `user_access_menu`
-  ADD CONSTRAINT `user_access_menu_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `user_role` (`id_role`),
-  ADD CONSTRAINT `user_access_menu_ibfk_2` FOREIGN KEY (`id_menu`) REFERENCES `user_menu` (`id_menu`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `user_access_sub_menu`
---
-ALTER TABLE `user_access_sub_menu`
-  ADD CONSTRAINT `user_access_sub_menu_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `user_role` (`id_role`),
-  ADD CONSTRAINT `user_access_sub_menu_ibfk_2` FOREIGN KEY (`id_sub_menu`) REFERENCES `user_sub_menu` (`id_sub_menu`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `user_sub_menu`
---
-ALTER TABLE `user_sub_menu`
-  ADD CONSTRAINT `user_sub_menu_ibfk_1` FOREIGN KEY (`id_menu`) REFERENCES `user_menu` (`id_menu`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_sub_menu_ibfk_2` FOREIGN KEY (`id_active`) REFERENCES `user_status` (`id_status`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
